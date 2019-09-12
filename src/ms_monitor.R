@@ -12,24 +12,24 @@ con = dbConnect(SQLite(), dbname="/Users/andreidm/ETH/projects/ms_monitor/data/n
 
 
 # get qc_values as a dataframe
-qc_values = dbGetQuery(con, 'select * from qc_values')[,-1]
-qc_metrics_descriptions = data.frame(names=colnames(qc_values), descriptions=descriptions)
+qc_values = dbGetQuery(con, 'select * from qc_values')
+qc_metrics_descriptions = data.frame(names=colnames(qc_values)[-1], descriptions=descriptions)
 
 # Define UI
 ui <- fluidPage(
   
     # Give the page a title
-    titlePanel("QC metrics distributions"),
+    titlePanel("QC characteristics"),
     
     # Generate a row with a sidebar
     sidebarLayout(      
       
       # Define the sidebar with one input
       sidebarPanel(
-        selectInput("metric", "Choose QC metric:", 
-                    choices=colnames(qc_values)),
+        selectInput("metric", "Choose a QC characteristic:", 
+                    choices=colnames(qc_values)[-1]),
         hr(),
-        helpText("Emperical distributions of QC metrics available for all the data acquired so far."),
+        helpText("All acquired data since 2019-05-24 is shown."),
         hr(),
         htmlOutput("metric_description")
       ),
@@ -38,7 +38,8 @@ ui <- fluidPage(
       
       # Create a spot for the barplot
       mainPanel(
-        plotOutput("metric_distribution_plot")  
+        plotOutput("distribution_plot"),
+        plotOutput("chonological_plot")
       )
     )
 )
@@ -47,20 +48,32 @@ ui <- fluidPage(
 server <- function(input, output) {
     
     # Fill in the spot we created for a plot
-    output$metric_distribution_plot <- renderPlot({
+    output$distribution_plot = renderPlot({
       
       ggplot(qc_values, aes(x=eval(parse(text=input$metric)))) + 
         geom_histogram(aes(y=..density..), colour="black", fill="white", bins = 50) +
         geom_density(alpha=.3, fill="lightblue") +
         geom_vline(aes(xintercept = tail(qc_values[,input$metric], n=1) ), 
                    linetype = "dashed", size = 0.8, color = "#FC4E07") +
-        labs(x = "values", y = "frequency") + 
+        labs(x = "Value", y = "Frequency") + 
         ggtitle(input$metric) +
         theme(plot.title = element_text(hjust = 0.5))
 
         })
     
-    output$metric_description <- renderUI({
+    output$chonological_plot = renderPlot({
+      
+      ggplot(qc_values, aes(x = acquisition_date, y = eval(parse(text=input$metric)))) +
+        geom_point(size = 2) + geom_line(group = 1) +
+        geom_point(data=qc_values[nrow(qc_values), c(input$metric, "acquisition_date")], aes(x = acquisition_date, y = eval(parse(text=input$metric))), color="red", size=2) +  # add red dot in the end
+        theme(axis.text.x = element_text(angle = 90)) + 
+        labs(x = "Date & time", y = "Value") + 
+        ggtitle(input$metric) +
+        theme(plot.title = element_text(hjust = 0.5))
+      
+    })
+    
+    output$metric_description = renderUI({
       HTML(paste(paste(input$metric, "is computed as"), qc_metrics_descriptions[qc_metrics_descriptions$names == input$metric, "descriptions"], sep="<br/>"))
       
     })
