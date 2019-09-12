@@ -1,5 +1,5 @@
 
-msm_version = "v.0.0.2"
+msm_version = "v.0.0.3"
 
 descriptions = c("193.072 + mean of absolute mass accuracy of Caffeine divided by average width of the peak",
                  "712.946 + mean absolute mass accuracy of Perfluorotetradecanoic acid divided by average width of the peak",
@@ -9,7 +9,7 @@ descriptions = c("193.072 + mean of absolute mass accuracy of Caffeine divided b
                  "mean of the sums of all isotope ratio diffs (in absolute numbers) divided by its number",
                  "mean of intensity of Perfluorotetradecanoic acid (mz ~712) divided by intensity of Fluconazole (mz ~305)",
                  "mean of intensity of the Fluconazole fragment divided by intensity of Fluconazole (mz ~305)",
-                 "mean of intensity of the Fluconazole fragment divided by intensity of Perfluorotetradecanoic acid (mz ~712)",
+                 "mean of intensity of the Perfluorotetradecanoic acid fragment divided by intensity of Perfluorotetradecanoic acid (mz ~712)",
                  "25th percentile intensity from a [150,250] mz range of a chemical noise scan",
                  "50th percentile intensity from a [150,250] mz range of a chemical noise scan",
                  "25th percentile intensity from a [650,750] mz range of a chemical noise scan",

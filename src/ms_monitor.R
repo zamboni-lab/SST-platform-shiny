@@ -7,7 +7,9 @@ library(RSQLite)
 source("constants.R")
 
 # connect to the sqlite file
-con = dbConnect(SQLite(), dbname="/Users/andreidm/ETH/projects/ms_monitor/data/qc_matrix_example.db")
+# con = dbConnect(SQLite(), dbname="/Users/andreidm/ETH/projects/ms_monitor/data/qc_matrix_example.db")
+con = dbConnect(SQLite(), dbname="/Users/andreidm/ETH/projects/ms_monitor/data/nas2_qc_matrix_sep10.db")
+
 
 # get qc_values as a dataframe
 qc_values = dbGetQuery(con, 'select * from qc_values')[,-1]
