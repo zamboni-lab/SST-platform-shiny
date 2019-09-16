@@ -1,5 +1,5 @@
 
-msm_version = "v.0.0.6"
+msm_version = "v.0.0.7"
 
 descriptions = c("193.072 + mean of absolute mass accuracy of Caffeine divided by average width of the peak",
                  "712.946 + mean absolute mass accuracy of Perfluorotetradecanoic acid divided by average width of the peak",

@@ -29,7 +29,13 @@ ui <- shinyUI(fluidPage(
                            hr(),
                            helpText("All acquired data since 2019-05-24 is shown."),
                            hr(),
-                           htmlOutput("metric_description")
+                           htmlOutput("metric_description"),
+                           hr(),
+                           selectInput("date", "Select run to add comment:", 
+                                       choices=rev(qc_values$acquisition_date)),
+                           textInput("comment", "Comment:", ""),
+                           actionButton("add_button", "Add comment"),
+                           hr()
                          ),
                          mainPanel(
                            plotOutput("distribution_plot"),
@@ -66,6 +72,9 @@ color.qc.table = function(table){
   
   table[,1] = substring(table[,1], 1, 10)
   table$score = paste(apply(scoring[,-1], 1, sum), "/", ncol(scoring)-1, sep = "")
+  
+  table = table[,c(1,ncol(table), seq(2,ncol(table)-1,1))]
+  
   
   return(table)
 }
@@ -107,9 +116,18 @@ server <- shinyServer(function(input, output) {
                               sanitize.text.function = function(x) x)
   
   output$metric_description = renderUI({
-    HTML(paste(paste(input$metric, "is computed as"), qc_metrics_descriptions[qc_metrics_descriptions$names == input$metric, "descriptions"], sep="<br/>"))
+    HTML(
+      paste(
+        paste(
+          "<b>", input$metric, "</b> is computed as"
+        ),
+        qc_metrics_descriptions[qc_metrics_descriptions$names == input$metric, "descriptions"], sep="<br/>"
+      )
+    )
     
   })
+  
+  
 })
 
 # Run the app
