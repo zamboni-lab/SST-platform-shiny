@@ -1,5 +1,6 @@
 
-msm_version = "v.0.0.7"
+msm.version = "v.0.0.8"
+db.path = "/Users/andreidm/ETH/projects/ms_monitor/data/nas2_qc_matrix_sep17.db"
 
 descriptions = c("193.072 + mean of absolute mass accuracy of Caffeine divided by average width of the peak",
                  "712.946 + mean absolute mass accuracy of Perfluorotetradecanoic acid divided by average width of the peak",

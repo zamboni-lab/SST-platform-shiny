@@ -7,7 +7,7 @@ library(RSQLite)
 source("constants.R")
 
 # connect to the sqlite file
-con = dbConnect(SQLite(), dbname="/Users/andreidm/ETH/projects/ms_monitor/data/nas2_qc_matrix_sep10.db")
+con = dbConnect(SQLite(), dbname=db.path)
 
 
 # get qc_values as a dataframe
@@ -74,6 +74,7 @@ color.qc.table = function(table){
   table$score = paste(apply(scoring[,-1], 1, sum), "/", ncol(scoring)-1, sep = "")
   
   table = table[,c(1,ncol(table), seq(2,ncol(table)-1,1))]
+  table = table[nrow(table):1,]
   
   
   return(table)
