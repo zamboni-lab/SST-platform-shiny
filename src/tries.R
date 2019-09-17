@@ -12,6 +12,7 @@ con = dbConnect(SQLite(), dbname=db.path)
 
 # get qc_values as a dataframe
 qc_values = dbGetQuery(con, 'select * from qc_values')
+qc_meta = dbGetQuery(con, 'select * from qc_meta')
 qc_metrics_descriptions = data.frame(names=colnames(qc_values)[-1], descriptions=descriptions)
 
 # Define UI
@@ -129,8 +130,22 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$button_click, {
-    js_string <- 'alert("Meta data for the run XYU has been updated.");'
-    session$sendCustomMessage(type='add_button', list(value = js_string))
+    
+    con2 = dbConnect(SQLite(), dbname=db.path)
+
+    update_query = paste("update qc_meta set user_comment = '", input$comment,
+                          "' where acquisition_date = '", input$date, "'", sep="")
+
+    dbSendQuery(con2, update_query)
+    dbDisconnect(con2)
+    
+    js = paste('alert("Meta data for run ', input$date, ' has been updated.");', sep = "")
+    session$sendCustomMessage(type='add_button', list(value = js))
+
+    updateTextInput(session, "comment", value = "")
+    
+    
+
   })
 
 }
