@@ -1,6 +1,10 @@
 
-msm.version = "v.0.0.9"
-db.path = "/Users/andreidm/ETH/projects/ms_monitor/data/nas2_qc_matrix_sep17.db"
+msm.version = "v.0.0.11"
+db_path = "/Users/andreidm/ETH/projects/ms_monitor/data/nas2_qc_matrix_sep17.db"
+
+names = c("resolution_200", "resolution_700", "average_accuracy", "chemical_dirt", "instrument_noise",
+          "isotopic_presence", "transmission", "fragmentation_305", "fragmentation_712", "baseline_25_150",
+          "baseline_50_150", "baseline_25_650", "baseline_50_650", "signal", "s2b", "s2n")
 
 descriptions = c("193.072 + mean of absolute mass accuracy of Caffeine divided by average width of the peak",
                  "712.946 + mean absolute mass accuracy of Perfluorotetradecanoic acid divided by average width of the peak",
@@ -18,3 +22,9 @@ descriptions = c("193.072 + mean of absolute mass accuracy of Caffeine divided b
                  "sum of mean intensities for all 37 ions",
                  "mean intensity of 3-(Heptadecafluorooctyl)aniline divided by mean 25th percentile intensity from a [500, 550] mz range of a normal scan",
                  "mean intensity of 3-(Heptadecafluorooctyl)aniline divided by (mean 50th percentile intensity - mean 25th percentile intensity) from a [500,550] mz range of a normal scan")
+
+qc_metrics_descriptions = data.frame(names=names, descriptions=descriptions)
+
+
+
+
