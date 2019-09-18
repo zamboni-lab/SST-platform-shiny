@@ -43,11 +43,9 @@ ui = fluidPage(
 )
 
 # Define server logic
-server <- function(input, output, session) {
+server = function(input, output, session) {
   
-  qc_values = reactive({
-    dbGetQuery(dbConnect(SQLite(), dbname=db_path), 'select * from qc_values')
-  })
+  qc_values = reactiveFileReader(intervalMillis = 1000, session, filePath = db_path, readFunc = read_qc_values)
   
   observe({
     updateSelectInput(session, "date", choices = rev(qc_values()$acquisition_date))

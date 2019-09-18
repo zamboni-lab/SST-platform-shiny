@@ -1,4 +1,9 @@
 
+read_qc_values = function(path){
+  as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_values'))
+}
+
+
 color_qc_table = function(table){
   
   scoring = table
