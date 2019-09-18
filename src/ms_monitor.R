@@ -45,6 +45,7 @@ ui = fluidPage(
 # Define server logic
 server = function(input, output, session) {
   
+  # check for updates in the file every other second
   qc_values = reactiveFileReader(intervalMillis = 1000, session, filePath = db_path, readFunc = read_qc_values)
   
   observe({
@@ -109,7 +110,6 @@ server = function(input, output, session) {
     update_query = paste("update qc_values set quality = '", input$quality,"' where acquisition_date = '", input$date, "'", sep="")
     dbSendQuery(con2, update_query)
     
-    # disconnect
     dbDisconnect(con2)
     
     # generate message for user

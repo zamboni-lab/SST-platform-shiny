@@ -10,16 +10,17 @@ color_qc_table = function(table){
   
   for (i in 3:ncol(table)){
     
-    values = table[,i][table[,i] > 0]
+    good_run_values = table[table["quality"] == 1, i]  # use only good runs to calculate percentiles
+    values = good_run_values[good_run_values > 0]  # filter out missing values
     
-    q25 = quantile(values, .25)
-    q75 = quantile(values, .75)
+    qs = quantile(values, c(.05, .25, .75, .95))
     
-    scoring[,i] = ifelse (table[,i] > q25 & table[,i] < q75, 1, 0)
+    scoring[,i] = ifelse (table[,i] > qs[1] & table[,i] < qs[4], 1, 0)  # score = 1 if it's within [0.05, 0.95] percentiles
     
     table[,i] = paste(
       '<div style="background-color: ',
-      ifelse (table[,i] > q25 & table[,i] < q75, "#AAFF8A", "#FF968D"),
+      ifelse (table[,i] > qs[2] & table[,i] < qs[3], "#AAFF8A",
+              ifelse (table[,i] <= qs[1] | table[,i] >= qs[4], "#FF968D", "#FFFC9B")),
       '; border-radius: 5px;">',
       round(table[,i], 4),
       '</div>',
