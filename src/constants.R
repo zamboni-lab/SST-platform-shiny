@@ -1,5 +1,5 @@
 
-msm.version = "v.0.0.11"
+msm.version = "v.0.0.12"
 db_path = "/Users/andreidm/ETH/projects/ms_monitor/data/nas2_qc_matrix_sep17.db"
 
 names = c("resolution_200", "resolution_700", "average_accuracy", "chemical_dirt", "instrument_noise",

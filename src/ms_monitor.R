@@ -3,22 +3,14 @@ library(shiny)
 library(ggplot2)
 library(DBI)
 library(RSQLite)
+library(stringr)
 
 source("constants.R")
-
-# connect to the sqlite file
-con = dbConnect(SQLite(), dbname=db.path)
-
-
-# get qc_values as a dataframe
-qc_values = dbGetQuery(con, 'select * from qc_values')
-qc_meta = dbGetQuery(con, 'select * from qc_meta')
-qc_metrics_descriptions = data.frame(names=colnames(qc_values)[-1], descriptions=descriptions)
+source("processing.R")
 
 # Define UI
-ui <- fluidPage(
+ui = fluidPage(
   
-  # Give the page a title
   titlePanel("QC characteristics"),
   
   tabsetPanel(type = "tabs",
@@ -26,17 +18,18 @@ ui <- fluidPage(
                        sidebarLayout(
                          sidebarPanel(
                            selectInput("metric", "Choose a QC characteristic:",
-                                       choices=colnames(qc_values)[-1]),
+                                       choices=qc_metrics_descriptions$names),  # date and quality cols excluded
                            hr(),
                            helpText("All acquired data since 2019-05-24 is shown."),
                            hr(),
                            htmlOutput("metric_description"),
                            hr(),
-                           selectInput("date", "Select run to add comment:",
-                                       choices=rev(qc_values$acquisition_date)),
+                           selectInput("date", "Select run to add meta data:", choices = c()),
+                           radioButtons("quality", "How was it?", choices = list("Good" = 1, "Bad" = 0), 
+                                        selected = 1),
                            textInput("comment", "Comment:", ""),
                            tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("add_button", function(message) {eval(message.value);});'))),
-                           actionButton("button_click", "Add comment"),
+                           actionButton("comment_button", "Add comment"),
                            hr()
                          ),
                          mainPanel(
@@ -49,60 +42,35 @@ ui <- fluidPage(
   )
 )
 
-color.qc.table = function(table){
-  
-  scoring = table
-  
-  for (i in 2:ncol(table)){
-    
-    values = table[,i][table[,i] > 0]
-    
-    q25 = quantile(values, .25)
-    q75 = quantile(values, .75)
-    
-    scoring[,i] = ifelse (table[,i] > q25 & table[,i] < q75, 1, 0)
-    
-    table[,i] = paste(
-      '<div style="background-color: ',
-      ifelse (table[,i] > q25 & table[,i] < q75, "#AAFF8A", "#FF968D"),
-      '; border-radius: 5px;">',
-      round(table[,i], 4),
-      '</div>',
-      sep=''
-    )
-  }
-  
-  table[,1] = substring(table[,1], 1, 10)
-  table$score = paste(apply(scoring[,-1], 1, sum), "/", ncol(scoring)-1, sep = "")
-  
-  table = table[,c(1,ncol(table), seq(2,ncol(table)-1,1))]
-  table = table[nrow(table):1,]
-  
-  return(table)
-}
-
 # Define server logic
 server <- function(input, output, session) {
+  
+  qc_values = reactive({
+    dbGetQuery(dbConnect(SQLite(), dbname=db_path), 'select * from qc_values')
+  })
+  
+  observe({
+    updateSelectInput(session, "date", choices = rev(qc_values()$acquisition_date))
+  })
   
   # Fill in the spot we created for a plot
   output$distribution_plot = renderPlot({
     
-    ggplot(qc_values, aes(x=eval(parse(text=input$metric)))) +
+    ggplot(qc_values(), aes(x=eval(parse(text=input$metric)))) +
       geom_histogram(aes(y=..density..), colour="black", fill="white", bins = 50) +
       geom_density(alpha=.3, fill="lightblue") +
-      geom_vline(aes(xintercept = tail(qc_values[,input$metric], n=1) ),
+      geom_vline(aes(xintercept = tail(qc_values()[,input$metric], n=1) ),
                  linetype = "dashed", size = 0.8, color = "#FC4E07") +
       labs(x = "Value", y = "Frequency") +
       ggtitle(input$metric) +
       theme(plot.title = element_text(hjust = 0.5))
-    
   })
   
   output$chonological_plot = renderPlot({
     
-    ggplot(qc_values, aes(x = acquisition_date, y = eval(parse(text=input$metric)))) +
+    ggplot(qc_values(), aes(x = acquisition_date, y = eval(parse(text=input$metric)))) +
       geom_point(size = 2) + geom_line(group = 1) +
-      geom_point(data=qc_values[nrow(qc_values), c(input$metric, "acquisition_date")], aes(x = acquisition_date, y = eval(parse(text=input$metric))), color="red", size=2) +  # add red dot in the end
+      geom_point(data=qc_values()[nrow(qc_values()), c(input$metric, "acquisition_date")], aes(x = acquisition_date, y = eval(parse(text=input$metric))), color="red", size=2) +  # add red dot in the end
       theme(axis.text.x = element_text(angle = 90)) +
       labs(x = "Date & time", y = "Value") +
       ggtitle(input$metric) +
@@ -110,9 +78,7 @@ server <- function(input, output, session) {
     
   })
   
-  colored_values = color.qc.table(qc_values)
-  
-  output$table <- renderTable({ colored_values },
+  output$table <- renderTable({ color_qc_table(qc_values()) },
                               hover = TRUE, bordered = TRUE,
                               spacing = 'xs', width = "auto", align = 'c',
                               sanitize.text.function = function(x) x)
@@ -129,23 +95,31 @@ server <- function(input, output, session) {
     
   })
   
-  observeEvent(input$button_click, {
+  observeEvent(input$comment_button, {
     
-    con2 = dbConnect(SQLite(), dbname=db.path)
+    con2 = dbConnect(SQLite(), dbname=db_path)
     
-    update_query = paste("update qc_meta set user_comment = '", input$comment,
-                         "' where acquisition_date = '", input$date, "'", sep="")
+    # add comment to the database
+    user_comment = str_replace_all(input$comment, "'", "")  # otherwise it falls down meeting ' symbol
     
+    update_query = paste("update qc_meta set user_comment = '", user_comment,"' where acquisition_date = '", input$date, "'", sep="")
     dbSendQuery(con2, update_query)
+    
+    # add quality value to the database
+    update_query = paste("update qc_meta set quality = '", input$quality,"' where acquisition_date = '", input$date, "'", sep="")
+    dbSendQuery(con2, update_query)
+    update_query = paste("update qc_values set quality = '", input$quality,"' where acquisition_date = '", input$date, "'", sep="")
+    dbSendQuery(con2, update_query)
+    
+    # disconnect
     dbDisconnect(con2)
     
+    # generate message for user
     js = paste('alert("Meta data for run ', input$date, ' has been updated.");', sep = "")
     session$sendCustomMessage(type='add_button', list(value = js))
     
+    # clear comment text area
     updateTextInput(session, "comment", value = "")
-    
-    
-    
   })
   
 }
