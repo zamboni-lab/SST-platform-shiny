@@ -7,10 +7,11 @@ read_qc_values = function(path){
   as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_values'))
 }
 
-get_run_score = function(qc_table){
+get_run_score = function(qc_table, input){
   # computes simple QC score for a new run
   
-  new_run_scoring = qc_table[nrow(qc_table),]
+  run_index = which(qc_table$acquisition_date == input$date)
+  run_scoring = qc_table[run_index,]
   
   for (i in 3:ncol(qc_table)){
     
@@ -20,11 +21,11 @@ get_run_score = function(qc_table){
     
     qs = quantile(values, c(.05, .25, .75, .95))
     
-    new_run_scoring[1,i] = ifelse (qc_table[nrow(qc_table), i] > qs[1] & qc_table[nrow(qc_table), i] < qs[4], 1, 0)  # score = 1 if it's within [0.05, 0.95] percentiles
+    run_scoring[1,i] = ifelse (qc_table[run_index, i] > qs[1] & qc_table[run_index, i] < qs[4], 1, 0)  # score = 1 if it's within [0.05, 0.95] percentiles
   }
   
   # compose simple score
-  score = paste(apply(new_run_scoring[,-c(1,2)], 1, sum), "/", ncol(new_run_scoring)-2, sep = "")
+  score = paste(apply(run_scoring[,-c(1,2)], 1, sum), "/", ncol(run_scoring)-2, sep = "")
   
   return(score)
 }
