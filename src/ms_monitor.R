@@ -1,14 +1,9 @@
 
 library(shiny)
-library(ggplot2)
-library(DBI)
-library(RSQLite)
-library(stringr)
 
 source("constants.R")
 source("processing.R")
 source("plotting.R")
-
 
 # Define UI
 ui = fluidPage(
@@ -20,7 +15,9 @@ ui = fluidPage(
               tabPanel("Summary",
                        sidebarLayout(
                          sidebarPanel(
-                           helpText("All acquired data since 2019-05-24 is shown."),
+                           helpText("Distributions are displayed for all the data acquired since 2019-05-24. Red line indicates the last QC run value."),
+                           hr(),
+                           htmlOutput("score"),
                            hr(),
                            selectInput("date", "Select run to add meta data:", choices = c()),
                            radioButtons("quality", "How was it?", choices = list("Good" = 1, "Bad" = 0),
@@ -77,6 +74,10 @@ server = function(input, output, session) {
     HTML(paste(paste("<b>", input$metric, "</b> is computed as"),
                qc_metrics_descriptions[qc_metrics_descriptions$names == input$metric, "descriptions"], sep="<br/>"
     ))
+  })
+  
+  output$score = renderUI({
+    HTML(paste("<b>Score:</b>", get_run_score(qc_values()), "QC characteristics are within good ranges.", sep = " "))
   })
   
   observeEvent(input$comment_button, {

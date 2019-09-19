@@ -1,43 +1,72 @@
 
+library(DBI)
+library(RSQLite)
+library(stringr)
+
 read_qc_values = function(path){
   as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_values'))
 }
 
-
-color_qc_table = function(table){
+get_run_score = function(qc_table){
+  # computes simple QC score for a new run
   
-  scoring = table
+  new_run_scoring = qc_table[nrow(qc_table),]
   
-  for (i in 3:ncol(table)){
+  for (i in 3:ncol(qc_table)){
     
-    good_run_values = table[table["quality"] == 1, i]  # use only good runs to calculate percentiles
+    all_previous_values = qc_table[1:(nrow(qc_table)-1), ]  # filter out last run
+    good_run_values = all_previous_values[all_previous_values["quality"] == 1, i]  # use only good runs to calculate percentiles
     values = good_run_values[good_run_values > 0]  # filter out missing values
     
     qs = quantile(values, c(.05, .25, .75, .95))
     
-    scoring[,i] = ifelse (table[,i] > qs[1] & table[,i] < qs[4], 1, 0)  # score = 1 if it's within [0.05, 0.95] percentiles
+    new_run_scoring[1,i] = ifelse (qc_table[nrow(qc_table), i] > qs[1] & qc_table[nrow(qc_table), i] < qs[4], 1, 0)  # score = 1 if it's within [0.05, 0.95] percentiles
+  }
+  
+  # compose simple score
+  score = paste(apply(new_run_scoring[,-c(1,2)], 1, sum), "/", ncol(new_run_scoring)-2, sep = "")
+  
+  return(score)
+}
+
+
+color_qc_table = function(qc_table){
+  # adds coloring for the table based on the simple QC score
+  
+  scoring = qc_table
+  
+  for (i in 3:ncol(qc_table)){
     
-    table[,i] = paste(
+    all_previous_values = qc_table[1:nrow(qc_table)-1,]  # filter out last element
+    good_run_values = all_previous_values[all_previous_values["quality"] == 1, i]  # use only good runs to calculate percentiles
+    values = good_run_values[good_run_values > 0]  # filter out missing values
+    
+    qs = quantile(values, c(.05, .25, .75, .95))
+    
+    scoring[,i] = ifelse (qc_table[,i] > qs[1] & qc_table[,i] < qs[4], 1, 0)  # score = 1 if it's within [0.05, 0.95] percentiles
+    
+    qc_table[,i] = paste(
       '<div style="background-color: ',
-      ifelse (table[,i] > qs[2] & table[,i] < qs[3], "#AAFF8A",
-              ifelse (table[,i] <= qs[1] | table[,i] >= qs[4], "#FF968D", "#FFFC9B")),
+      ifelse (qc_table[,i] > qs[2] & qc_table[,i] < qs[3], "#AAFF8A",
+              ifelse (qc_table[,i] <= qs[1] | qc_table[,i] >= qs[4], "#FF968D", "#FFFC9B")),
       '; border-radius: 5px;">',
-      round(table[,i], 4),
+      round(qc_table[,i], 4),
       '</div>',
       sep=''
     )
   }
   
   # cut time for better display
-  table[,1] = substring(table[,1], 1, 10)
-  # compose simple score
-  table$score = paste(apply(scoring[,-c(1,2)], 1, sum), "/", ncol(scoring)-2, sep = "")
+  qc_table[,1] = substring(qc_table[,1], 1, 10)
   
-  # table$quality = ifelse(table$quality == 1, "good", "bad")
+  
+  
+  # add simple score
+  qc_table$score = paste(apply(scoring[,-c(1,2)], 1, sum), "/", ncol(scoring)-2, sep = "")
   
   # change ordering for convenience
-  table = table[,c(1,ncol(table), seq(2,ncol(table)-1,1))]
-  table = table[nrow(table):1,]
+  qc_table = qc_table[,c(1,ncol(qc_table), seq(2,ncol(qc_table)-1,1))]
+  qc_table = qc_table[nrow(qc_table):1,]
   
-  return(table)
+  return(qc_table)
 }
