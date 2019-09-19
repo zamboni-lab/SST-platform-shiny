@@ -14,11 +14,11 @@ get_run_score = function(qc_table, input){
   run_scoring = qc_table[run_index,]
   
   for (i in 3:ncol(qc_table)){
-    
+  
     all_previous_values = qc_table[1:(nrow(qc_table)-1), ]  # filter out last run
     good_run_values = all_previous_values[all_previous_values["quality"] == 1, i]  # use only good runs to calculate percentiles
     values = good_run_values[good_run_values > 0]  # filter out missing values
-    
+  
     qs = quantile(values, c(.05, .25, .75, .95))
     
     run_scoring[1,i] = ifelse (qc_table[run_index, i] > qs[1] & qc_table[run_index, i] < qs[4], 1, 0)  # score = 1 if it's within [0.05, 0.95] percentiles
@@ -59,8 +59,6 @@ color_qc_table = function(qc_table){
   
   # cut time for better display
   qc_table[,1] = substring(qc_table[,1], 1, 10)
-  
-  
   
   # add simple score
   qc_table$score = paste(apply(scoring[,-c(1,2)], 1, sum), "/", ncol(scoring)-2, sep = "")

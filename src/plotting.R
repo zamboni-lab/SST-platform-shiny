@@ -38,7 +38,7 @@ plot_qc_summary = function(data, input){
   
   if (data[data$acquisition_date == input$date, "quality"] == 1){
     # if the selected run has 'quality' = 1, it's displayed as geom_hline
-    plot_title = "QC distributions with selected run"
+    plot_title = 'QC distributions with selected run'
     
     data = data[data$quality == 1,]  # only good runs are used for plotting
     run_index = which(data$acquisition_date == input$date)
@@ -59,7 +59,7 @@ plot_qc_summary = function(data, input){
     }
   } else {
     # if the selected run has 'quality' = 0, it's excluded
-    plot_title = "QC distributions without selected run"
+    plot_title = 'QC distributions without selected run'
     
     data = data[data$quality == 1,]  # only good runs are used for plotting
     
@@ -76,7 +76,7 @@ plot_qc_summary = function(data, input){
   }
   
   figure = ggarrange(plotlist=plots_list, ncol=4, nrow=4)
-  annotate_figure(figure, fig.lab=plot_title)
+  figure = annotate_figure(figure, top = text_grob(plot_title, face = "bold", size = 12))
   
   return(figure)
 }
