@@ -28,9 +28,14 @@ color_qc_table = function(table){
     )
   }
   
+  # cut time for better display
   table[,1] = substring(table[,1], 1, 10)
+  # compose simple score
   table$score = paste(apply(scoring[,-c(1,2)], 1, sum), "/", ncol(scoring)-2, sep = "")
   
+  # table$quality = ifelse(table$quality == 1, "good", "bad")
+  
+  # change ordering for convenience
   table = table[,c(1,ncol(table), seq(2,ncol(table)-1,1))]
   table = table[nrow(table):1,]
   
