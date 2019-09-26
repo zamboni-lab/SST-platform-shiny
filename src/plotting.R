@@ -80,6 +80,3 @@ plot_qc_summary = function(data, input){
   
   return(figure)
 }
-
-
-

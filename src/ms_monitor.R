@@ -1,58 +1,82 @@
 
 library(shiny)
+library(shinydashboard)
 
 source("constants.R")
 source("processing.R")
 source("plotting.R")
 
-# Define UI
-ui = fluidPage(
+
+ui = dashboardPage(
+  dashboardHeader(title = "FIA-MS Check"),
   
-  titlePanel("QC characteristics"),
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem("QC", tabName = "qc", icon = icon("dashboard")),
+      menuItem("QC trends", tabName = "qc2", icon = icon("chart-line")),
+      menuItem("QC table", tabName = "qc3", icon = icon("th"))
+    )),
   
-  tabsetPanel(type = "tabs",
+  dashboardBody(tabItems(
+    tabItem(tabName = "qc",
+            
+            fluidPage(
               
-              tabPanel("Summary",
-                       sidebarLayout(
-                         sidebarPanel(
-                           helpText("Distributions are displayed for all the data acquired since 2019-05-24. Red dashed line is displayed for good QC runs to indicate the selected QC run value."),
-                           hr(),
-                           htmlOutput("score"),
-                           hr(),
-                           selectInput("date", "Select run:", choices = c()),
-                           radioButtons("quality", "How was it?", choices = list("Good" = 1, "Bad" = 0),
-                                        selected = 1),
-                           textInput("comment", "Comment:", ""),
-                           tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("add_button", function(message) {eval(message.value);});'))),
-                           actionButton("comment_button", "Add metadata"),
-                           hr()
-                         ),
-                         mainPanel(
-                           plotOutput("summary_plot")
-                         )
-                       )),
+              titlePanel("QC Summary"),
+              sidebarLayout(
+                sidebarPanel(
+                  helpText("Distributions are displayed for all the data acquired since 2019-05-24. Red dashed line is displayed for good QC runs to indicate the selected QC run value."),
+                  hr(),
+                  htmlOutput("score"),
+                  hr(),
+                  selectInput("date", "Select run:", choices = c()),
+                  radioButtons("quality", "How was it?", choices = list("Good" = 1, "Bad" = 0),
+                               selected = 1),
+                  textInput("comment", "Comment:", ""),
+                  tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("add_button", function(message) {eval(message.value);});'))),
+                  actionButton("comment_button", "Add metadata"),
+                  hr()
+                ),
+                mainPanel(
+                  plotOutput("summary_plot")
+                )
+              )
+            )
+    ),
+    
+    tabItem(tabName = "qc2",
+            fluidPage(
+              titlePanel("QC Trends"),
+              sidebarLayout(
+                sidebarPanel(
+                  selectInput("metric", "Choose a QC characteristic:",
+                              choices=qc_metrics_descriptions$names),  # date and quality cols excluded
+                  hr(),
+                  helpText("Data since 2019-05-24 is shown with bad quality runs excluded."),
+                  hr(),
+                  htmlOutput("metric_description"),
+                  hr()
+                ),
+                mainPanel(
+                  plotOutput("chonological_plot"),
+                  plotOutput("distribution_plot")
+                  
+                )
+              )
+            )),
+    
+    tabItem(tabName = "qc3",
+            fluidPage(
+              titlePanel("QC Table"),
+              box(
+                width = NULL, status = "primary",
+                div(style = 'overflow-x: scroll', tableOutput('table'))
+              )
               
-              tabPanel("QC plots",
-                       sidebarLayout(
-                         sidebarPanel(
-                           selectInput("metric", "Choose a QC characteristic:",
-                                       choices=qc_metrics_descriptions$names),  # date and quality cols excluded
-                           hr(),
-                           helpText("Data since 2019-05-24 is shown with bad quality runs excluded."),
-                           hr(),
-                           htmlOutput("metric_description"),
-                           hr()
-                         ),
-                         mainPanel(
-                           plotOutput("chonological_plot"),
-                           plotOutput("distribution_plot")
-                           
-                         )
-                       )),
-              tabPanel("Table",
-                       tableOutput("table"))
-  )
+            ))
+  ))
 )
+
 
 # Define server logic
 server = function(input, output, session) {
