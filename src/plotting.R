@@ -43,13 +43,14 @@ plot_qc_summary = function(data, input){
     data = data[data$quality == 1,]  # only good runs are used for plotting
     run_index = which(data$acquisition_date == input$date)
     
-    for (i in 3:ncol(data)){
+    # setting just a number of a column is probably dump decision
+    for (i in 5:ncol(data)){
       
       qc_name = colnames(data)[i]
       df = data.frame(values = data[,i], qc_metric = qc_name)
       run_value = df$values[run_index]
       
-      plots_list[[i-2]] = ggplot(df, aes(qc_metric, values)) +
+      plots_list[[i-4]] = ggplot(df, aes(qc_metric, values)) +
         geom_violin(alpha=.3, fill="lightblue") +
         geom_boxplot(width=0.075) +
         labs(x= "", y = "") +
@@ -63,12 +64,12 @@ plot_qc_summary = function(data, input){
     
     data = data[data$quality == 1,]  # only good runs are used for plotting
     
-    for (i in 3:ncol(data)){
+    for (i in 5:ncol(data)){
       
       qc_name = colnames(data)[i]
       df = data.frame(values = data[,i], qc_metric = qc_name)
       
-      plots_list[[i-2]] = ggplot(df, aes(qc_metric, values)) +
+      plots_list[[i-4]] = ggplot(df, aes(qc_metric, values)) +
         geom_violin(alpha=.3, fill="lightblue") +
         geom_jitter(shape=1, size=3, position=position_jitter(0.15)) +
         labs(x= "", y = "")

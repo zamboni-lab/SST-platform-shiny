@@ -3,17 +3,17 @@ library(DBI)
 library(RSQLite)
 library(stringr)
 
-read_qc_values = function(path){
-  as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_values'))
+read_qc_metrics = function(path){
+  as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_metrics'))
 }
 
-get_run_score = function(qc_table, input){
+get_naive_run_score = function(qc_table, input){
   # computes simple QC score for a new run
   
   run_index = which(qc_table$acquisition_date == input$date)
   run_scoring = qc_table[run_index,]
   
-  for (i in 3:ncol(qc_table)){
+  for (i in 5:ncol(qc_table)){
     
     all_previous_values = qc_table[1:(nrow(qc_table)-1), ]  # filter out last run
     good_run_values = all_previous_values[all_previous_values["quality"] == 1, i]  # use only good runs to calculate percentiles
@@ -25,18 +25,151 @@ get_run_score = function(qc_table, input){
   }
   
   # compose simple score
-  score = paste(apply(run_scoring[,-c(1,2)], 1, sum), "/", ncol(run_scoring)-2, sep = "")
+  score = paste(apply(run_scoring[,-c(1,2,3,4)], 1, sum), "/", ncol(run_scoring)-4, sep = "")
   
   return(score)
 }
 
 
+get_run_score = function(qc_table, input){
+  # computes QC score for a new run, considering different ranges of 'good values'
+  
+  run_index = which(qc_table$acquisition_date == input$date)
+  run_scoring = qc_table[run_index,]
+  
+  # metrics for which low values are warned
+  for (metric in c("resolution_200", "resolution_700", "signal", "s2b", "s2n")){
+    
+    all_previous_values = qc_table[1:(nrow(qc_table)-1), ]  # filter out last run
+    good_run_values = all_previous_values[all_previous_values["quality"] == 1, metric]  # use only good runs to calculate percentiles
+    values = good_run_values[good_run_values > 0]  # filter out missing values
+    
+    qs = quantile(values, c(.05, .25, .75, .95))
+    
+    run_scoring[1, metric] = ifelse (qc_table[run_index, metric] > qs[2], 1, 0)  # score = 1 if it's within [0.25, 1.] percentiles
+  }
+  
+  # metrics for which high values are warned
+  for (metric in c("average_accuracy", "chemical_dirt", "instrument_noise", "baseline_25_150", "baseline_50_150", "baseline_25_650", "baseline_50_650")){
+    
+    all_previous_values = qc_table[1:(nrow(qc_table)-1), ]  # filter out last run
+    good_run_values = all_previous_values[all_previous_values["quality"] == 1, metric]  # use only good runs to calculate percentiles
+    values = good_run_values[good_run_values > 0]  # filter out missing values
+    
+    qs = quantile(values, c(.05, .25, .75, .95))
+    
+    run_scoring[1, metric] = ifelse (qc_table[run_index, metric] < qs[3], 1, 0)  # score = 1 if it's within [0., 0.75] percentiles
+  }
+  
+  # metrics for which out of range values are warned
+  for (metric in c("isotopic_presence", "transmission", "fragmentation_305", "fragmentation_712")){
+    
+    all_previous_values = qc_table[1:(nrow(qc_table)-1), ]  # filter out last run
+    good_run_values = all_previous_values[all_previous_values["quality"] == 1, metric]  # use only good runs to calculate percentiles
+    values = good_run_values[good_run_values > 0]  # filter out missing values
+    
+    qs = quantile(values, c(.05, .25, .75, .95))
+    
+    run_scoring[1, metric] = ifelse (qc_table[run_index, metric] > qs[1] & qc_table[run_index, metric] < qs[4], 1, 0)  # score = 1 if it's within [0.05, 0.95] percentiles
+  }
+  
+  # compose simple score
+  score = paste(apply(run_scoring[,-c(1,2,3,4)], 1, sum), "/", ncol(run_scoring)-4, sep = "")
+  
+  return(score)
+}
+
 color_qc_table = function(qc_table){
+  # new version of coloring the table, based on the improved QC scoring
+  
+  scoring = qc_table
+  
+  # metrics for which low values are warned
+  for (metric in c("resolution_200", "resolution_700", "signal", "s2b", "s2n")){
+    
+    all_previous_values = qc_table[1:nrow(qc_table)-1,]  # filter out last element
+    good_run_values = all_previous_values[all_previous_values["quality"] == 1, metric]  # use only good runs to calculate percentiles
+    values = good_run_values[good_run_values > 0]  # filter out missing values
+    
+    qs = quantile(values, c(.05, .25, .5, .75, .95))
+    
+    scoring[, metric] = ifelse (qc_table[, metric] > qs[2], 1, 0)  # score = 1 if it's within [0.25, 1.] percentiles
+    
+    qc_table[,metric] = paste(
+      '<div style="background-color: ',
+      ifelse (qc_table[,metric] > qs[3], "#AAFF8A",
+              ifelse (qc_table[,metric] <= qs[3] & qc_table[,metric] >= qs[2], "#FFFC9B", "#FF968D")),
+      '; border-radius: 5px;">',
+      round(qc_table[,metric], 4),
+      '</div>',
+      sep=''
+    )
+  }
+  
+  # metrics for which high values are warned
+  for (metric in c("average_accuracy", "chemical_dirt", "instrument_noise", "baseline_25_150", "baseline_50_150", "baseline_25_650", "baseline_50_650")){
+    
+    all_previous_values = qc_table[1:(nrow(qc_table)-1), ]  # filter out last run
+    good_run_values = all_previous_values[all_previous_values["quality"] == 1, metric]  # use only good runs to calculate percentiles
+    values = good_run_values[good_run_values > 0]  # filter out missing values
+    
+    qs = quantile(values, c(.05, .25, .5, .75, .95))
+    
+    scoring[, metric] = ifelse (qc_table[, metric] < qs[4], 1, 0)  # score = 1 if it's within [0., 0.75] percentiles
+    
+    qc_table[,metric] = paste(
+      '<div style="background-color: ',
+      ifelse (qc_table[,metric] < qs[3], "#AAFF8A",
+              ifelse (qc_table[,metric] >= qs[3] & qc_table[,metric] <= qs[4], "#FFFC9B", "#FF968D")),
+      '; border-radius: 5px;">',
+      round(qc_table[,metric], 4),
+      '</div>',
+      sep=''
+    )
+  }
+  
+  # metrics for which out of range values are warned
+  for (metric in c("isotopic_presence", "transmission", "fragmentation_305", "fragmentation_712")){
+    
+    all_previous_values = qc_table[1:(nrow(qc_table)-1), ]  # filter out last run
+    good_run_values = all_previous_values[all_previous_values["quality"] == 1, metric]  # use only good runs to calculate percentiles
+    values = good_run_values[good_run_values > 0]  # filter out missing values
+    
+    qs = quantile(values, c(.05, .25, .5, .75, .95))
+    
+    scoring[, metric] = ifelse (qc_table[, metric] > qs[1] & qc_table[run_index, metric] < qs[5], 1, 0)  # score = 1 if it's within [0.05, 0.95] percentiles
+    
+    qc_table[,metric] = paste(
+      '<div style="background-color: ',
+      ifelse (qc_table[,metric] > qs[2] & qc_table[,metric] < qs[4], "#AAFF8A",
+              ifelse (qc_table[,metric] <= qs[1] | qc_table[,metric] >= qs[5], "#FF968D", "#FFFC9B")),
+      '; border-radius: 5px;">',
+      round(qc_table[,metric], 4),
+      '</div>',
+      sep=''
+    )
+  }
+  
+  # cut time for better display
+  qc_table[,3] = substring(qc_table[,3], 1, 10)
+  
+  # add simple score
+  qc_table$score = paste(apply(scoring[,-c(1,2,3,4)], 1, sum), "/", ncol(scoring)-4, sep = "")
+  
+  # change ordering for convenience
+  qc_table = qc_table[,c(1,ncol(qc_table), seq(2,ncol(qc_table)-1,1))]
+  qc_table = qc_table[rev(order(as.Date(qc_table$acquisition_date))),]
+  
+  return(qc_table)
+}
+
+
+make_naive_coloring_for_qc_table = function(qc_table){
   # adds coloring for the table based on the simple QC score
   
   scoring = qc_table
   
-  for (i in 3:ncol(qc_table)){
+  for (i in 5:ncol(qc_table)){
     
     all_previous_values = qc_table[1:nrow(qc_table)-1,]  # filter out last element
     good_run_values = all_previous_values[all_previous_values["quality"] == 1, i]  # use only good runs to calculate percentiles
@@ -61,7 +194,7 @@ color_qc_table = function(qc_table){
   qc_table[,1] = substring(qc_table[,1], 1, 10)
   
   # add simple score
-  qc_table$score = paste(apply(scoring[,-c(1,2)], 1, sum), "/", ncol(scoring)-2, sep = "")
+  qc_table$score = paste(apply(scoring[,-c(1,2,3,4)], 1, sum), "/", ncol(scoring)-4, sep = "")
   
   # change ordering for convenience
   qc_table = qc_table[,c(1,ncol(qc_table), seq(2,ncol(qc_table)-1,1))]

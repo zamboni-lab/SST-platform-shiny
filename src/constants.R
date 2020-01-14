@@ -1,6 +1,6 @@
 
-msm.version = "v.0.1.3"
-db_path = "/Users/andreidm/ETH/projects/ms_monitor/data/nas2_qc_matrix_sep18.db"
+msm.version = "v.0.1.6"
+db_path = "/Users/andreidm/ETH/projects/ms_monitor/data/nas2_qc_metrics_database_jan14.sqlite"
 
 names = c("resolution_200", "resolution_700", "average_accuracy", "chemical_dirt", "instrument_noise",
           "isotopic_presence", "transmission", "fragmentation_305", "fragmentation_712", "baseline_25_150",
