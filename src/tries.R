@@ -4,4 +4,5 @@ data = as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from
 
 scoring = data
 
-data[rev(order(as.Date(data$acquisition_date))),"acquisition_date"]
+data
+data[1:10, ]
