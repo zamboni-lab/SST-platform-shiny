@@ -137,7 +137,7 @@ color_qc_table = function(qc_table){
     
     qs = quantile(values, c(.05, .25, .5, .75, .95))
     
-    scoring[, metric] = ifelse (qc_table[, metric] > qs[1] & qc_table[run_index, metric] < qs[5], 1, 0)  # score = 1 if it's within [0.05, 0.95] percentiles
+    scoring[, metric] = ifelse (qc_table[, metric] > qs[1] & qc_table[, metric] < qs[5], 1, 0)  # score = 1 if it's within [0.05, 0.95] percentiles
     
     qc_table[,metric] = paste(
       '<div style="background-color: ',

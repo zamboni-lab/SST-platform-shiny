@@ -26,7 +26,7 @@ plot_chronology = function(data, input){
   
   ggplot(data, aes(x = acquisition_date, y = eval(parse(text=input$metric)))) +
     geom_point(size = 2) + geom_line(group = 1) +
-    geom_point(data=data[nrow(data), c(input$metric, "acquisition_date")], aes(x = acquisition_date, y = eval(parse(text=input$metric))), color="red", size=2) +  # add red dot in the end
+    geom_point(data=data[1, c(input$metric, "acquisition_date")], aes(x = acquisition_date, y = eval(parse(text=input$metric))), color="red", size=2) +  # add red dot in the end
     theme(axis.text.x = element_text(angle = 90)) +
     labs(x = "Date & time", y = "Value") +
     # ggtitle(input$metric) +
