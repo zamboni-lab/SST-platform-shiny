@@ -22,7 +22,8 @@ plot_chronology = function(data, input){
   
   data = data[data$quality == 1,]  # only good runs are used for plotting
   data = data[rev(order(as.Date(data$acquisition_date))),]  # sort by date
-  data = data[1:50,]  # plot only last 50 runs (otherwise it's squeezed too much)
+  data = na.omit(data[1:50,])  # plot only last 50 runs (otherwise it's squeezed too much)
+  
   
   ggplot(data, aes(x = acquisition_date, y = eval(parse(text=input$metric)))) +
     geom_point(size = 2) + geom_line(group = 1) +
