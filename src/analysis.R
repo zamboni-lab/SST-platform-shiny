@@ -18,29 +18,40 @@ heatmap(bad_data_correlation)
 library(reshape2)
 library(ggplot2)
 
+# distribution plots
+plots_list = list()
+
 # nicer plot for good runs
 melted_good = melt(good_data_correlation)
 
-ggplot(data = melted_good, aes(x=Var1, y=Var2, fill=value)) + 
+cor_plot_1 =ggplot(data = melted_good, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
-        plot.title = element_text(hjust = 0.5)) +
+        plot.title = element_text(size = 10, hjust = 0.5)) +
   coord_fixed() +
-  ggtitle("Cross-correlations for \"good\" runs")
+  ggtitle("\"Good\" runs")
 
 # nicer plot for bad runs
 melted_bad = melt(bad_data_correlation)
 
-ggplot(data = melted_bad, aes(x=Var1, y=Var2, fill=value)) + 
+cor_plot_2 = ggplot(data = melted_bad, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
-        plot.title = element_text(hjust = 0.5)) +
+        plot.title = element_text(size = 10, hjust = 0.5)) +
   coord_fixed() +
-  ggtitle("Cross-correlations for \"bad\" runs")
+  ggtitle("\"Bad\" runs")
+
+# 
+plots_list[[1]] = cor_plot_1
+plots_list[[2]] = cor_plot_2
+
+figure = ggarrange(plotlist=plots_list, ncol=1, nrow=2)
+figure = annotate_figure(figure, top = text_grob("Cross-correlations of QC characteristics", face = "bold", size = 12))
+figure
 
 # compare statistically each of 16 qc characteristics
 comparisons = as.data.frame(matrix(nrow = 3, ncol = 16))
@@ -77,8 +88,19 @@ d_plot_1 = ggplot(df, aes(qc_metric, values)) +
   geom_violin(alpha=.3, fill="lightblue") +
   geom_boxplot(width=0.075) +
   geom_jitter(shape=1, size=3, position=position_jitter(0.15), aes(colour = quality)) +
-  labs(x= "", y = "") +
-  scale_colour_manual(name="quality", values=c("red", "black"))
+  labs(x= "", y = "")  +
+  scale_colour_manual(name="quality", values=c("red", "black")) +
+  ggtitle("fragmentation_712") +
+  theme(
+    legend.position = c(.95, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "right",
+    legend.margin = margin(3, 3, 3, 3),
+    axis.title.x=element_blank(),
+    axis.text.x=element_blank(),
+    axis.ticks.x=element_blank(),
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5)
+  )
 
 # average accuracy distribution
 df = data.frame(qc_metric = "average_accuracy",
@@ -92,7 +114,18 @@ d_plot_2 = ggplot(df, aes(qc_metric, values)) +
   geom_boxplot(width=0.075) +
   geom_jitter(shape=1, size=3, position=position_jitter(0.15), aes(colour = quality)) +
   labs(x= "", y = "") +
-  scale_colour_manual(name="quality", values=c("red", "black"))
+  scale_colour_manual(name="quality", values=c("red", "black")) + 
+  ggtitle("fragmentation_712") +
+  theme(
+    legend.position = c(.95, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "right",
+    legend.margin = margin(3, 3, 3, 3),
+    axis.title.x=element_blank(),
+    axis.text.x=element_blank(),
+    axis.ticks.x=element_blank(),
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5)
+  )
 
 # instrument noise distribution
 df = data.frame(qc_metric = "instrument_noise",
@@ -106,7 +139,18 @@ d_plot_3 = ggplot(df, aes(qc_metric, values)) +
   geom_boxplot(width=0.075) +
   geom_jitter(shape=1, size=3, position=position_jitter(0.15), aes(colour = quality)) +
   labs(x= "", y = "") +
-  scale_colour_manual(name="quality", values=c("red", "black"))
+  scale_colour_manual(name="quality", values=c("red", "black")) +
+  ggtitle("fragmentation_712") +
+  theme(
+    legend.position = c(.95, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "right",
+    legend.margin = margin(3, 3, 3, 3),
+    axis.title.x=element_blank(),
+    axis.text.x=element_blank(),
+    axis.ticks.x=element_blank(),
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5)
+  )
 
 # compose
 plots_list[[1]] = d_plot_1
@@ -114,7 +158,7 @@ plots_list[[2]] = d_plot_2
 plots_list[[3]] = d_plot_3
 
 figure = ggarrange(plotlist=plots_list, ncol=3, nrow=1)
-figure = annotate_figure(figure, top = text_grob("Distributions of some QC characteristics", face = "bold", size = 12))
+figure = annotate_figure(figure)
 figure
 
 # chronological plots
@@ -132,10 +176,10 @@ df[,3] = substring(df[,3], 1, 10)
 chr_plot_1 = ggplot(df, aes(x = acquisition_date, y = values)) +
   geom_point(size = 2) + geom_line(group = 1) +
   geom_point(data = df[1, ], aes(x = acquisition_date, y = values), color="red", size=2) +  # add red dot in the end
-  theme(axis.text.x = element_text(angle = 90)) +
-  labs(x = "Date", y = "Value") +
-  ggtitle("Chronological plot for fragmentation_712") +
-  theme(plot.title = element_text(hjust = 0.5))
+  labs(x = "Date", y = "") +
+  ggtitle("fragmentation_712") +
+  theme(plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+        axis.text.x = element_text(size = 7, angle = 90))
 
 
 # baseline_50_650 plot
@@ -150,10 +194,10 @@ df[,3] = substring(df[,3], 1, 10)
 chr_plot_2 = ggplot(df, aes(x = acquisition_date, y = values)) +
   geom_point(size = 2) + geom_line(group = 1) +
   geom_point(data = df[1, ], aes(x = acquisition_date, y = values), color="red", size=2) +  # add red dot in the end
-  theme(axis.text.x = element_text(angle = 90)) +
-  labs(x = "Date", y = "Value") +
-  ggtitle("Chronological plot for baseline_50_650") +
-  theme(plot.title = element_text(hjust = 0.5))
+  labs(x = "Date", y = "") +
+  ggtitle("baseline_50_650") +
+  theme(plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+        axis.text.x = element_text(size = 7, angle = 90))
 
 # s2b plot
 df = data.frame(qc_metric = "s2b",
@@ -167,8 +211,16 @@ df[,3] = substring(df[,3], 1, 10)
 chr_plot_3 = ggplot(df, aes(x = acquisition_date, y = values)) +
   geom_point(size = 2) + geom_line(group = 1) +
   geom_point(data = df[1, ], aes(x = acquisition_date, y = values), color="red", size=2) +  # add red dot in the end
-  theme(axis.text.x = element_text(angle = 90)) +
-  labs(x = "Date", y = "Value") +
-  ggtitle("Chronological plot for s2b") +
-  theme(plot.title = element_text(hjust = 0.5))
+  labs(x = "Date", y = "") +
+  ggtitle("s2b") +
+  theme(plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+        axis.text.x = element_text(size = 7, angle = 90))
 
+# compose
+plots_list[[1]] = chr_plot_1
+plots_list[[2]] = chr_plot_2
+plots_list[[3]] = chr_plot_3
+
+figure = ggarrange(plotlist=plots_list, ncol=3, nrow=1)
+figure = annotate_figure(figure)
+figure

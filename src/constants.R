@@ -1,5 +1,5 @@
 
-msm.version = "v.0.1.12"
+msm.version = "v.0.1.13"
 db_path = "/Users/andreidm/ETH/projects/ms_monitor/data/nas2_qc_metrics_database_jan14.sqlite"
 
 names = c("resolution_200", "resolution_700", "average_accuracy", "chemical_dirt", "instrument_noise",
