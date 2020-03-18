@@ -1,6 +1,6 @@
 
-version = "v.0.1.16"
-db_path = "/Users/andreidm/ETH/projects/shiny_qc/data/nas2_qc_metrics_database_mar11.sqlite"
+version = "v.0.1.18"
+db_path = "/Users/andreidm/ETH/projects/shiny_qc/data/nas2_qc_metrics_database_mar18.sqlite"
 
 names = c("resolution_200", "resolution_700", "average_accuracy", "chemical_dirt", "instrument_noise",
           "isotopic_presence", "transmission", "fragmentation_305", "fragmentation_712", "baseline_25_150",

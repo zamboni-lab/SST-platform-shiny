@@ -1,7 +1,4 @@
 
-library(DBI)
-library(RSQLite)
-
 plot_metrics_cross_correlations = function(good_data, bad_data){
   
   # watch table with cross-correlations in 'good' data
@@ -51,7 +48,6 @@ plot_metrics_cross_correlations = function(good_data, bad_data){
   figure = ggarrange(plotlist=plots_list, ncol=1, nrow=2)
   figure = annotate_figure(figure, top = text_grob("Cross-correlations of QC characteristics", face = "bold", size = 12))
   figure
-  
 }
 
 assess_metrics_statistical_differences = function(good_data, bad_data){
@@ -74,13 +70,19 @@ assess_metrics_statistical_differences = function(good_data, bad_data){
   }
   
   # TODO: add multiple comparison correction
-  
+  for (i in 1:nrow(comparisons)){
+    comparisons[i, ] = p.adjust(comparisons[i, ], method = "BH")  
+  }
+
   # watch significant differences
-  comparisons < 0.05
-  comparisons < 0.01
+  print("< 0.05")
+  print(comparisons < 0.05)
+  
+  print("< 0.01")
+  print(comparisons < 0.01)
 }
 
-plot_few_metrics_distributions(full_data){
+plot_few_metrics_distributions = function(full_data){
   ## this method plots a couple of distributions of metrics nicely
   ## was done for a poster image
   
@@ -172,7 +174,7 @@ plot_few_metrics_distributions(full_data){
   figure
 }
 
-plot_few_metrics_choronologically(good_data){
+plot_few_metrics_choronologically = function(good_data){
   ## this method plots nicely a couple of metrics over time
   ## was done for a poster image
   
@@ -278,7 +280,10 @@ explore_features_dimensionality = function(){
 
 main = function(){
   
-  path = "/Users/andreidm/ETH/projects/ms_monitor/data/nas2_qc_metrics_database_jan14.sqlite"
+  library(DBI)
+  library(RSQLite)
+  
+  path = "/Users/andreidm/ETH/projects/shiny_qc/data/nas2_qc_metrics_database_mar18.sqlite"
   full_data = as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_metrics'))
   
   bad_data = full_data[full_data$quality == 0, ]
@@ -287,10 +292,18 @@ main = function(){
   # to call or not to call
   if (FALSE){
     plot_metrics_cross_correlations(good_data, bad_data)
-    assess_metrics_statistical_differences(good_data, bad_data)
     plot_few_metrics_distributions(full_data)
     plot_few_metrics_chronologically(good_data)
     explore_features_dimensionality()
+  } else {
+    assess_metrics_statistical_differences(good_data, bad_data)
   }
   
 }
+
+main()
+
+
+
+
+
