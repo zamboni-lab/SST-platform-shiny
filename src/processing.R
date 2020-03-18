@@ -8,6 +8,7 @@ read_qc_metrics = function(path){
 }
 
 get_naive_run_score = function(qc_table, input){
+  # old method, not used, renamed into "naive"
   # computes simple QC score for a new run
   
   run_index = which(qc_table$acquisition_date == input$date)
@@ -117,7 +118,7 @@ color_qc_table = function(qc_table){
     
     scoring[, metric] = ifelse (qc_table[, metric] < qs[4], 1, 0)  # score = 1 if it's within [0., 0.75] percentiles
     
-    qc_table[,metric] = paste(
+    qc_table[, metric] = paste(
       '<div style="background-color: ',
       ifelse (qc_table[,metric] < qs[3], "#AAFF8A",
               ifelse (qc_table[,metric] >= qs[3] & qc_table[,metric] <= qs[4], "#FFFC9B", "#FF968D")),
@@ -165,6 +166,7 @@ color_qc_table = function(qc_table){
 
 
 make_naive_coloring_for_qc_table = function(qc_table){
+  # old method, renamed into "naive"
   # adds coloring for the table based on the simple QC score
   
   scoring = qc_table
