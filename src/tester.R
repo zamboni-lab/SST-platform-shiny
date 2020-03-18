@@ -90,7 +90,7 @@ server = function(input, output, session) {
   output$chonological_plot = renderPlot({ plot_chronology(qc_metrics(), input) })
   output$summary_plot = renderPlot({ plot_qc_summary(qc_metrics(), input) }, height = 600)
   
-  output$table = renderTable({ color_qc_table(qc_metrics()) },
+  output$table = renderTable({ make_ci_based_coloring_for_qc_table(qc_metrics()) },
                              hover = TRUE, bordered = TRUE,
                              spacing = 'xs', width = "auto", align = 'c',
                              sanitize.text.function = function(x) x)
@@ -102,7 +102,7 @@ server = function(input, output, session) {
   })
   
   output$score = renderUI({
-    HTML(paste("<b>Score:</b>", get_run_score(qc_metrics(), input), "QC characteristics are within good ranges.", sep = " "))
+    HTML(paste("<b>Score:</b>", get_ci_based_run_score(qc_metrics(), input), "QC characteristics are within good ranges.", sep = " "))
   })
   
   observeEvent(input$comment_button, {
