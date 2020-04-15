@@ -2,6 +2,8 @@
 library(DBI)
 library(RSQLite)
 library(stringr)
+library(boot)
+
 
 read_qc_metrics = function(path){
   as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_metrics'))
@@ -45,7 +47,7 @@ get_ci_based_run_score = function(qc_table, input){
     good_run_values = all_previous_values[all_previous_values["quality"] == 1, metric]  # use only good runs to calculate percentiles
     values = good_run_values[good_run_values > 0]  # filter out missing values
     
-    # bootstrapped estimate of 95% confidence interval for mean
+    # bootstrapped estimate of 80% confidence interval for mean
     data.boot = boot(values, function(data, index) mean(data[index]), R=5000)
     boot.res = boot.ci(data.boot, conf = 0.8, type = "all")
     ci = c(boot.res$bca[4], boot.res$bca[5])
@@ -61,7 +63,7 @@ get_ci_based_run_score = function(qc_table, input){
     good_run_values = all_previous_values[all_previous_values["quality"] == 1, metric]  # use only good runs to calculate percentiles
     values = good_run_values[good_run_values > 0]  # filter out missing values
     
-    # bootstrapped estimate of 95% confidence interval for mean
+    # bootstrapped estimate of 80% confidence interval for mean
     data.boot = boot(values, function(data, index) mean(data[index]), R=5000)
     boot.res = boot.ci(data.boot, conf = 0.8, type = "all")
     ci = c(boot.res$bca[4], boot.res$bca[5])
@@ -76,12 +78,12 @@ get_ci_based_run_score = function(qc_table, input){
     good_run_values = all_previous_values[all_previous_values["quality"] == 1, metric]  # use only good runs to calculate percentiles
     values = good_run_values[good_run_values > 0]  # filter out missing values
     
-    # bootstrapped estimate of 95% confidence interval for mean
+    # bootstrapped estimate of 80% confidence interval for mean
     data.boot = boot(values, function(data, index) mean(data[index]), R=5000)
     boot.res = boot.ci(data.boot, conf = 0.8, type = "all")
     ci = c(boot.res$bca[4], boot.res$bca[5])
     
-    run_scoring[1, metric] = ifelse (qc_table[run_index, metric] >= ci[1] & qc_table[run_index, metric] <= ci[2], 1, 0)  # score = 1 if it's within 95% ci
+    run_scoring[1, metric] = ifelse (qc_table[run_index, metric] >= ci[1] & qc_table[run_index, metric] <= ci[2], 1, 0)  # score = 1 if it's within 80% ci
   }
   
   # compose simple score
@@ -306,8 +308,8 @@ make_ci_based_coloring_for_qc_table = function(qc_table){
     boot.res = boot.ci(data.boot, conf = 0.8, type = "all")
     ci = c(boot.res$bca[4], boot.res$bca[5])
     
-    print(metric)
-    print(ci)
+    # print(metric)
+    # print(ci)
     
     scoring[, metric] = ifelse (qc_table[, metric] < ci[2], 1, 0)  # score = 1 if it's < upper bound of 95% CI
     

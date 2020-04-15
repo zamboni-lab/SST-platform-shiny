@@ -1,5 +1,5 @@
 
-version = "v.0.1.18"
+version = "v.0.1.20"
 db_path = "/Users/andreidm/ETH/projects/shiny_qc/data/nas2_qc_metrics_database_mar18.sqlite"
 
 names = c("resolution_200", "resolution_700", "average_accuracy", "chemical_dirt", "instrument_noise",
