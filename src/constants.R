@@ -1,6 +1,9 @@
 
-version = "v.0.1.25"
-db_path = "/Users/andreidm/ETH/projects/shiny_qc/data/nas2_qc_metrics_database_apr16.sqlite"
+version = "v.0.1.26"
+metrics_db_path = "/Users/andreidm/ETH/projects/shiny_qc/data/nas2_qc_metrics_database_apr16.sqlite"
+features_db_path = "/Users/andreidm/ETH/projects/shiny_qc/data/nas2_qc_features_database_apr16.sqlite"
+tunes_db_path = "/Users/andreidm/ETH/projects/shiny_qc/data/nas2_qc_tunes_database_apr16.sqlite"
+
 
 names = c("resolution_200", "resolution_700", "average_accuracy", "chemical_dirt", "instrument_noise",
           "isotopic_presence", "transmission", "fragmentation_305", "fragmentation_712", "baseline_25_150",

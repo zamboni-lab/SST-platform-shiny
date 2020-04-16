@@ -120,9 +120,9 @@ ui = dashboardPage(
 server = function(input, output, session) {
   
   # check for updates in the file every other second
-  qc_meta = reactiveFileReader(intervalMillis = 1000, session, filePath = db_path, readFunc = read_qc_meta)
-  qc_metrics = reactiveFileReader(intervalMillis = 1000, session, filePath = db_path, readFunc = read_qc_metrics)
-  qc_qualities = reactiveFileReader(intervalMillis = 1000, session, filePath = db_path, readFunc = read_qc_qualities)
+  qc_meta = reactiveFileReader(intervalMillis = 1000, session, filePath = metrics_db_path, readFunc = read_qc_meta)
+  qc_metrics = reactiveFileReader(intervalMillis = 1000, session, filePath = metrics_db_path, readFunc = read_qc_metrics)
+  qc_qualities = reactiveFileReader(intervalMillis = 1000, session, filePath = metrics_db_path, readFunc = read_qc_qualities)
   
   observe({
     # select buffer
@@ -158,31 +158,9 @@ server = function(input, output, session) {
     HTML(paste("<b>Score:</b>", get_run_score_from_qualities(qc_qualities(), input), "QC characteristics are within good ranges.", sep = " "))
   })
   
-  # observeEvent(input$buffer, {
-  #   
-  #   
-  #   
-  # })
-  
-  
-  
   observeEvent(input$comment_button, {
     
-    con2 = dbConnect(SQLite(), dbname=db_path)
-    
-    # add comment to the database
-    user_comment = str_replace_all(input$comment, "'", "")  # otherwise it falls down meeting ' symbol
-    
-    update_query = paste("update qc_meta set user_comment = '", user_comment,"' where acquisition_date = '", input$date, "'", sep="")
-    dbSendQuery(con2, update_query)
-    
-    # add quality value to the database
-    update_query = paste("update qc_meta set quality = '", input$quality,"' where acquisition_date = '", input$date, "'", sep="")
-    dbSendQuery(con2, update_query)
-    update_query = paste("update qc_metrics set quality = '", input$quality,"' where acquisition_date = '", input$date, "'", sep="")
-    dbSendQuery(con2, update_query)
-    
-    dbDisconnect(con2)
+    update_databases_with_quality_and_comment(input)
     
     # generate message for user
     js = paste('alert("Metadata for run ', input$date, ' has been updated. The quality field has been changed to ', input$quality, '.");', sep = "")

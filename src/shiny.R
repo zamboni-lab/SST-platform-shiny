@@ -35,7 +35,6 @@ ui = dashboardPage(
                   textInput("comment", "Comment:", ""),
                   tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("add_button", function(message) {eval(message.value);});'))),
                   actionButton("comment_button", "Add metadata"),
-                  hr()
                 ),
                 mainPanel(
                   plotOutput("summary_plot")
@@ -82,7 +81,7 @@ ui = dashboardPage(
 server = function(input, output, session) {
   
   # check for updates in the file every other second
-  qc_metrics = reactiveFileReader(intervalMillis = 1000, session, filePath = db_path, readFunc = read_qc_metrics)
+  qc_metrics = reactiveFileReader(intervalMillis = 1000, session, filePath = metrics_db_path, readFunc = read_qc_metrics)
   
   observe({ updateSelectInput(session, "date", choices = qc_metrics()[rev(order(as.Date(qc_metrics()$acquisition_date))),"acquisition_date"] ) })
   
@@ -107,7 +106,7 @@ server = function(input, output, session) {
   
   observeEvent(input$comment_button, {
     
-    con2 = dbConnect(SQLite(), dbname=db_path)
+    con2 = dbConnect(SQLite(), dbname=metrics_db_path)
     
     # add comment to the database
     user_comment = str_replace_all(input$comment, "'", "")  # otherwise it falls down meeting ' symbol

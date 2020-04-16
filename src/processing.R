@@ -4,18 +4,73 @@ library(RSQLite)
 library(stringr)
 library(boot)
 
+source("constants.R")
 
 read_qc_meta = function(path){
+  ## this method should have a path arguement to be used in dynamic reader
   as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_meta'))
 }
 
 read_qc_metrics = function(path){
+  ## this method should have a path arguement to be used in dynamic reader
   as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_metrics'))
 }
 
 read_qc_qualities = function(path){
+  ## this method should have a path arguement to be used in dynamic reader
   as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_metrics_qualities'))
 }
+
+
+update_databases_with_quality_and_comment = function(input){
+  ## updates all three databases with specified quality for the run of chosed acquisition date
+  ## also adds user comment to qc_meta table of qc_metrics database
+  
+  
+  # connect to metrics database
+  con2 = dbConnect(SQLite(), dbname=metrics_db_path)
+  
+  # add comment to the database
+  user_comment = str_replace_all(input$comment, "'", "")  # otherwise it falls down meeting ' symbol
+  
+  update_query = paste("update qc_meta set user_comment = '", user_comment,"' where acquisition_date = '", input$date, "'", sep="")
+  dbSendQuery(con2, update_query)
+  
+  # add quality value to the database
+  update_query = paste("update qc_meta set quality = '", input$quality,"' where acquisition_date = '", input$date, "'", sep="")
+  dbSendQuery(con2, update_query)
+  update_query = paste("update qc_metrics set quality = '", input$quality,"' where acquisition_date = '", input$date, "'", sep="")
+  dbSendQuery(con2, update_query)
+  update_query = paste("update qc_metrics_qualities set quality = '", input$quality,"' where acquisition_date = '", input$date, "'", sep="")
+  dbSendQuery(con2, update_query)
+  
+  dbDisconnect(con2)
+  
+  # connect to features database
+  con2 = dbConnect(SQLite(), dbname=features_db_path)
+  
+  # add quality value to the database
+  update_query = paste("update qc_meta set quality = '", input$quality,"' where acquisition_date = '", input$date, "'", sep="")
+  dbSendQuery(con2, update_query)
+  update_query = paste("update qc_features_1 set quality = '", input$quality,"' where acquisition_date = '", input$date, "'", sep="")
+  dbSendQuery(con2, update_query)
+  update_query = paste("update qc_features_2 set quality = '", input$quality,"' where acquisition_date = '", input$date, "'", sep="")
+  dbSendQuery(con2, update_query)
+  
+  dbDisconnect(con2)
+  
+  # connect to tunes database
+  con2 = dbConnect(SQLite(), dbname=tunes_db_path)
+  
+  # add quality value to the database
+  update_query = paste("update qc_meta set quality = '", input$quality,"' where acquisition_date = '", input$date, "'", sep="")
+  dbSendQuery(con2, update_query)
+  update_query = paste("update qc_tunes set quality = '", input$quality,"' where acquisition_date = '", input$date, "'", sep="")
+  dbSendQuery(con2, update_query)
+  
+  dbDisconnect(con2)
+}
+
 
 get_run_score_from_qualities = function(qualities_table, input){
   ## since v.0.1.24, we use table of qualities stored in database to compute run score
