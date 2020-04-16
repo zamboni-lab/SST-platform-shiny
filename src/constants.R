@@ -1,5 +1,5 @@
 
-version = "v.0.1.26"
+version = "v.0.1.27"
 metrics_db_path = "/Users/andreidm/ETH/projects/shiny_qc/data/nas2_qc_metrics_database_apr16.sqlite"
 features_db_path = "/Users/andreidm/ETH/projects/shiny_qc/data/nas2_qc_features_database_apr16.sqlite"
 tunes_db_path = "/Users/andreidm/ETH/projects/shiny_qc/data/nas2_qc_tunes_database_apr16.sqlite"

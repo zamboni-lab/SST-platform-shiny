@@ -38,9 +38,7 @@ ui = dashboardPage(
                 solidHeader = FALSE,
                 width = 12,
                 column(width=3, shinyjs::useShinyjs(), shinyjs::disabled(textInput("chemical_mix", "Chemical mix:", "20190522_4GHz"))),
-                column(width=3, selectInput("buffer", "Select buffer:", choices = c()) ),
-                
-                "One chemical mix and two types of buffers are available.",
+                column(width=3, selectInput("buffer", "Select buffer:", choices = c()) )
               ),
               box(
                 width = 4, status = "info", solidHeader = TRUE,
@@ -141,7 +139,7 @@ server = function(input, output, session) {
   
   output$distribution_plot = renderPlot({ plot_distribution(qc_metrics(), input) })
   output$chonological_plot = renderPlot({ plot_chronology(qc_metrics(), input) })
-  # output$summary_plot = renderPlot({ plot_qc_summary(qc_metrics(), input) }, height = 600)
+  output$summary_plot = renderPlot({ plot_qc_summary_by_buffer(qc_metrics(), qc_meta(), input) }, height = 600)
   
   output$table = renderTable({ make_ci_based_coloring_for_qc_table(qc_metrics()) },
                              hover = TRUE, bordered = TRUE,
