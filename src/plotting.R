@@ -2,6 +2,68 @@
 library(ggplot2)
 library(ggpubr)
 
+
+plot_distribution_by_buffer = function(metrics_data, meta_data, qualities_data, input){
+  ## plots distribution of a QC characteristic given data and user input
+  ## filtering takes place by buffer, then by qualities
+  
+  # take meta ids of selected buffer
+  qc_meta_ids = meta_data[meta_data["buffer_id"] == input$buffer_qc2, "id"]
+  
+  # take entries of selected buffer
+  buffer_data = metrics_data[metrics_data["meta_id"][[1]] %in% qc_meta_ids, ]  # in metrics db
+  buffer_qualities = qualities_data[qualities_data["meta_id"][[1]] %in% qc_meta_ids, ]  # in qualities db
+  
+  # filter out "bad" runs according to general quality
+  general_good_data = buffer_data[buffer_qualities$quality == 1,]  # in metrics db
+  general_good_qualities = buffer_qualities[buffer_qualities$quality == 1,]  # in qualities db
+  
+  # filter out "bad" runs according to specified metric
+  data = general_good_data[general_good_qualities[input$metric] == 1,]
+  
+  ggplot(data, aes(x=eval(parse(text=input$metric)))) +
+    geom_histogram(aes(y=..density..), colour="black", fill="white", bins = 50) +
+    geom_density(alpha=.3, fill="lightblue") +
+    geom_vline(aes(xintercept = tail(data[,input$metric], n=1) ),
+               linetype = "dashed", size = 0.8, color = "#FC4E07") +
+    labs(x = "Value", y = "Frequency") +
+    # ggtitle(input$metric) +
+    theme(plot.title = element_text(hjust = 0.5))
+}
+
+plot_chronology_by_buffer = function(metrics_data, meta_data, qualities_data, input){
+  ## plots chronological values of a QC characteristic given data and user input
+  ## filtering takes place by buffer, then by qualities
+  
+  # take meta ids of selected buffer
+  qc_meta_ids = meta_data[meta_data["buffer_id"] == input$buffer_qc2, "id"]
+  
+  # take entries of selected buffer
+  buffer_data = metrics_data[metrics_data["meta_id"][[1]] %in% qc_meta_ids, ]  # in metrics db
+  buffer_qualities = qualities_data[qualities_data["meta_id"][[1]] %in% qc_meta_ids, ]  # in qualities db
+  
+  # filter out "bad" runs according to general quality
+  general_good_data = buffer_data[buffer_qualities$quality == 1,]  # in metrics db
+  general_good_qualities = buffer_qualities[buffer_qualities$quality == 1,]  # in qualities db
+  
+  # filter out "bad" runs according to specified metric
+  data = general_good_data[general_good_qualities[input$metric] == 1,]
+  
+  # sort by date
+  data = data[rev(order(as.Date(data$acquisition_date))),]
+  data = na.omit(data[1:50,])  # plot only last 50 runs (otherwise it's squeezed too much)
+  
+  ggplot(data, aes(x = acquisition_date, y = eval(parse(text=input$metric)))) +
+    geom_point(size = 2) + geom_line(group = 1) +
+    geom_point(data=data[1, c(input$metric, "acquisition_date")], aes(x = acquisition_date, y = eval(parse(text=input$metric))), color="red", size=2) +  # add red dot in the end
+    theme(axis.text.x = element_text(angle = 90)) +
+    labs(x = "Date & time", y = "Value") +
+    # ggtitle(input$metric) +
+    theme(plot.title = element_text(hjust = 0.5))
+}
+
+
+
 plot_distribution = function(data, input){
   ## plots distribution of a QC characteristic given data and user input
   
@@ -40,7 +102,7 @@ plot_qc_summary_by_buffer = function(metrics_data, meta_data, input){
   ## method plots distributions of QC characteristics of a run on a single figure
   
   # take meta ids of selected buffer
-  qc_meta_ids = meta_data[meta_data["buffer_id"] == input$buffer, "id"]
+  qc_meta_ids = meta_data[meta_data["buffer_id"] == input$buffer_qc1, "id"]
   # take entries of selected buffer in metrics db
   data = metrics_data[metrics_data["meta_id"][[1]] %in% qc_meta_ids, ]
   
@@ -87,8 +149,6 @@ plot_qc_summary_by_buffer = function(metrics_data, meta_data, input){
         labs(x= "", y = "") +
         geom_hline(yintercept = run_value,
                    linetype = "dashed", size = 0.6, color = "#FC4E07")
-
-      
     }
   }
   

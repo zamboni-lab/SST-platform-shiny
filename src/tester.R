@@ -38,7 +38,7 @@ ui = dashboardPage(
                 solidHeader = FALSE,
                 width = 12,
                 column(width=3, shinyjs::useShinyjs(), shinyjs::disabled(textInput("chemical_mix", "Chemical mix:", "20190522_4GHz"))),
-                column(width=3, selectInput("buffer", "Select buffer:", choices = c()) )
+                column(width=3, selectInput("buffer_qc1", "Select buffer:", choices = c()) )
               ),
               box(
                 width = 4, status = "info", solidHeader = TRUE,
@@ -70,11 +70,12 @@ ui = dashboardPage(
                 status = "info",
                 solidHeader = FALSE,
                 width = 12,
-                "Some text",  # TODO: add choice of buffer (enabled) and chemical mix (disabled)
+                column(width=3, shinyjs::useShinyjs(), shinyjs::disabled(textInput("chemical_mix", "Chemical mix:", "20190522_4GHz"))),
+                column(width=3, selectInput("buffer_qc2", "Select buffer:", choices = c()) )
               ),
               box(
                 width = 4, status = "info", solidHeader = TRUE,
-                helpText("Data since 2019-05-24 is shown with bad quality runs excluded."),
+                helpText("Data since 2019-05-24 is shown with bad quality metrics excluded."),
                 hr(),
                 selectInput("metric", "Choose a QC characteristic:",
                             choices=qc_metrics_descriptions$names),  # date and quality cols excluded
@@ -123,13 +124,18 @@ server = function(input, output, session) {
   qc_qualities = reactiveFileReader(intervalMillis = 1000, session, filePath = metrics_db_path, readFunc = read_qc_qualities)
   
   observe({
-    # select buffer
-    updateSelectInput(session, "buffer", choices = unique(qc_meta()["buffer_id"]) )
+    # select buffer on QC summary tab
+    updateSelectInput(session, "buffer_qc1", choices = unique(qc_meta()["buffer_id"]) )
+  })
+  
+  observe({
+    # select buffer on QC trends tab
+    updateSelectInput(session, "buffer_qc2", choices = unique(qc_meta()["buffer_id"]) )
   })
   
   observe({ 
     # take meta ids of selected buffer
-    qc_meta_ids = qc_meta()[qc_meta()["buffer_id"] == input$buffer, "id"]
+    qc_meta_ids = qc_meta()[qc_meta()["buffer_id"] == input$buffer_qc1, "id"]
     # take entries of selected buffer in metrics db
     qc_metrics = qc_metrics()[qc_metrics()["meta_id"][[1]] %in% qc_meta_ids, ]
     
@@ -137,8 +143,10 @@ server = function(input, output, session) {
     updateSelectInput(session, "date", choices = qc_metrics[rev(order(as.Date(qc_metrics$acquisition_date))), "acquisition_date"] ) })
   
   
-  output$distribution_plot = renderPlot({ plot_distribution(qc_metrics(), input) })
-  output$chonological_plot = renderPlot({ plot_chronology(qc_metrics(), input) })
+  output$distribution_plot = renderPlot({ plot_distribution_by_buffer(qc_metrics(), qc_meta(), qc_qualities(), input) })
+  
+  # output$chonological_plot = renderPlot({ plot_chronology(qc_metrics(), input) })
+  output$chonological_plot = renderPlot({ plot_chronology_by_buffer(qc_metrics(), qc_meta(), qc_qualities(), input) })
   output$summary_plot = renderPlot({ plot_qc_summary_by_buffer(qc_metrics(), qc_meta(), input) }, height = 600)
   
   output$table = renderTable({ make_ci_based_coloring_for_qc_table(qc_metrics()) },
