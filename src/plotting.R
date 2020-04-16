@@ -84,9 +84,10 @@ plot_qc_summary_by_buffer = function(metrics_data, meta_data, input){
       plots_list[[i-4]] = ggplot(df, aes(qc_metric, values)) +
         geom_violin(alpha=.3, fill="lightblue") +
         geom_jitter(shape=1, size=3, alpha = 0.5, position=position_jitter(0.15)) +
+        labs(x= "", y = "") +
         geom_hline(yintercept = run_value,
                    linetype = "dashed", size = 0.6, color = "#FC4E07")
-        labs(x= "", y = "")
+
       
     }
   }
