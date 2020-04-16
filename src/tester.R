@@ -40,15 +40,16 @@ ui = dashboardPage(
                 column(width=3, shinyjs::useShinyjs(), shinyjs::disabled(textInput("chemical_mix", "Chemical mix:", "20190522_4GHz"))),
                 column(width=3, selectInput("buffer", "Select buffer:", choices = c()) ),
                 
-                "Some text",  # TODO: add choice of buffer (enabled) and chemical mix (disabled)
+                "One chemical mix and two types of buffers are available.",
               ),
               box(
                 width = 4, status = "info", solidHeader = TRUE,
                 helpText("Distributions are displayed for all the data acquired since 2019-05-24. Red dashed line is displayed for good QC runs to indicate the selected QC run value."),
                 hr(),
+                selectInput("date", "Select run:", choices = c()),
+                hr(),
                 htmlOutput("score"),
                 hr(),
-                selectInput("date", "Select run:", choices = c()),
                 radioButtons("quality", "Change quality:", choices = list("Good" = 1, "Bad" = 0),
                              selected = 1),
                 textInput("comment", "Comment:", ""),
@@ -153,9 +154,9 @@ server = function(input, output, session) {
     ))
   })
   
-  # output$score = renderUI({
-  #   HTML(paste("<b>Score:</b>", get_ci_based_run_score(qc_metrics(), input), "QC characteristics are within good ranges.", sep = " "))
-  # })
+  output$score = renderUI({
+    HTML(paste("<b>Score:</b>", get_run_score_from_qualities(qc_qualities(), input), "QC characteristics are within good ranges.", sep = " "))
+  })
   
   # observeEvent(input$buffer, {
   #   

@@ -14,7 +14,17 @@ read_qc_metrics = function(path){
 }
 
 read_qc_qualities = function(path){
-  as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_qualities'))
+  as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_metrics_qualities'))
+}
+
+get_run_score_from_qualities = function(qualities_table, input){
+  ## since v.0.1.24, we use table of qualities stored in database to compute run score
+  ## the score is just a some of individual quality fields for all metrics
+  
+  run_index = which(qualities_table$acquisition_date == input$date)
+  run_score = sum(qualities_table[run_index, 5:ncol(qualities_table)])
+  
+  return(paste(run_score, "/", ncol(qualities_table)-4, sep=""))
 }
 
 get_naive_run_score = function(qc_table, input){
