@@ -1,5 +1,6 @@
 
 library(shiny)
+library(shinyjs)
 library(shinydashboard)
 
 source("constants.R")
@@ -36,6 +37,9 @@ ui = dashboardPage(
                 status = "info",
                 solidHeader = FALSE,
                 width = 12,
+                column(width=3, shinyjs::useShinyjs(), shinyjs::disabled(textInput("chemical_mix", "Chemical mix:", "20190522_4GHz"))),
+                column(width=3, selectInput("buffer", "Select buffer:", choices = c()) ),
+                
                 "Some text",  # TODO: add choice of buffer (enabled) and chemical mix (disabled)
               ),
               box(
@@ -115,13 +119,28 @@ ui = dashboardPage(
 server = function(input, output, session) {
   
   # check for updates in the file every other second
+  qc_meta = reactiveFileReader(intervalMillis = 1000, session, filePath = db_path, readFunc = read_qc_meta)
   qc_metrics = reactiveFileReader(intervalMillis = 1000, session, filePath = db_path, readFunc = read_qc_metrics)
+  qc_qualities = reactiveFileReader(intervalMillis = 1000, session, filePath = db_path, readFunc = read_qc_qualities)
   
-  observe({ updateSelectInput(session, "date", choices = qc_metrics()[rev(order(as.Date(qc_metrics()$acquisition_date))),"acquisition_date"] ) })
+  observe({
+    # select buffer
+    updateSelectInput(session, "buffer", choices = unique(qc_meta()["buffer_id"]) )
+  })
+  
+  observe({ 
+    # take meta ids of selected buffer
+    qc_meta_ids = qc_meta()[qc_meta()["buffer_id"] == input$buffer, "id"]
+    # take entries of selected buffer in metrics db
+    qc_metrics = qc_metrics()[qc_metrics()["meta_id"][[1]] %in% qc_meta_ids, ]
+    
+    # select date based on selected buffer
+    updateSelectInput(session, "date", choices = qc_metrics[rev(order(as.Date(qc_metrics$acquisition_date))), "acquisition_date"] ) })
+  
   
   output$distribution_plot = renderPlot({ plot_distribution(qc_metrics(), input) })
   output$chonological_plot = renderPlot({ plot_chronology(qc_metrics(), input) })
-  output$summary_plot = renderPlot({ plot_qc_summary(qc_metrics(), input) }, height = 600)
+  # output$summary_plot = renderPlot({ plot_qc_summary(qc_metrics(), input) }, height = 600)
   
   output$table = renderTable({ make_ci_based_coloring_for_qc_table(qc_metrics()) },
                              hover = TRUE, bordered = TRUE,
@@ -134,9 +153,17 @@ server = function(input, output, session) {
     ))
   })
   
-  output$score = renderUI({
-    HTML(paste("<b>Score:</b>", get_ci_based_run_score(qc_metrics(), input), "QC characteristics are within good ranges.", sep = " "))
-  })
+  # output$score = renderUI({
+  #   HTML(paste("<b>Score:</b>", get_ci_based_run_score(qc_metrics(), input), "QC characteristics are within good ranges.", sep = " "))
+  # })
+  
+  # observeEvent(input$buffer, {
+  #   
+  #   
+  #   
+  # })
+  
+  
   
   observeEvent(input$comment_button, {
     

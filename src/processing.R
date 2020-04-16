@@ -5,8 +5,16 @@ library(stringr)
 library(boot)
 
 
+read_qc_meta = function(path){
+  as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_meta'))
+}
+
 read_qc_metrics = function(path){
   as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_metrics'))
+}
+
+read_qc_qualities = function(path){
+  as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_qualities'))
 }
 
 get_naive_run_score = function(qc_table, input){
