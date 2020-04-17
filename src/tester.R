@@ -74,7 +74,7 @@ ui = dashboardPage(
                 column(width=3, selectInput("buffer_qc2", "Select buffer:", choices = c()) )
               ),
               box(
-                width = 4, status = "info", solidHeader = TRUE,
+                width = 3, status = "info", solidHeader = TRUE,
                 helpText("Data since 2019-05-24 is shown with bad quality metrics excluded."),
                 hr(),
                 selectInput("metric", "Choose a QC characteristic:",
@@ -85,7 +85,7 @@ ui = dashboardPage(
               ),
               
               box(
-                width = 8, status = "primary",
+                width = 9, status = "primary",
                 plotOutput("chonological_plot"),
                 plotOutput("distribution_plot")
               )
@@ -95,22 +95,16 @@ ui = dashboardPage(
             fluidPage(
               titlePanel("QC Table"),
               box(
-                status = "info",
-                solidHeader = FALSE,
-                width = 12,
+                status = "info", solidHeader = FALSE, width = 12,
                 column(width=3, shinyjs::useShinyjs(), shinyjs::disabled(textInput("chemical_mix", "Chemical mix:", "20190522_4GHz"))),
                 column(width=3, selectInput("buffer_qc3", "Select buffer:", choices = c()) )
               ),
               box(
-                width = 4, status = "primary",
-                div(style = 'overflow-x: scroll', tableOutput('table_info'))
-              ),
-              
-              box(
-                width = 8, status = "primary",
-                div(style = 'overflow-x: scroll', tableOutput('table')),
-                # div(style = 'overflow-x: scroll', tableOutput('table_values')),
+                width = 12, status = "primary",
+                column(width=3, div(style = 'overflow-x: scroll', tableOutput('table_info'))),
+                column(width=9, div(style = 'overflow-x: scroll', tableOutput('table_values')))
               )
+              
               
             ))
   ))
@@ -158,22 +152,15 @@ server = function(input, output, session) {
   observe({
     output$table_info = renderTable({ get_info_table(qc_metrics(), qc_meta(), qc_qualities(), input$buffer_qc3) },
                                     hover = TRUE, bordered = TRUE,
-                                    spacing = 'xs', width = "auto", align = 'c',
-                                    sanitize.text.function = function(x) x)
+                                    spacing = 'xs', width = "auto", align = 'c')
   })
   
- 
-
-  # output$table_values = renderTable({ make_ci_based_coloring_for_qc_table(qc_metrics()) },
-  #                                 hover = TRUE, bordered = TRUE,
-  #                                 spacing = 'xs', width = "auto", align = 'c',
-  #                                 sanitize.text.function = function(x) x)
-  # 
-  
-  output$table = renderTable({ make_ci_based_coloring_for_qc_table(qc_metrics()) },
-                             hover = TRUE, bordered = TRUE,
-                             spacing = 'xs', width = "auto", align = 'c',
-                             sanitize.text.function = function(x) x)
+  observe({
+    output$table_values = renderTable({ get_colored_table_for_metrics(qc_metrics(), qc_meta(), qc_qualities(), input$buffer_qc3) },
+                                      hover = TRUE, bordered = TRUE,
+                                      spacing = 'xs', width = "auto", align = 'c',
+                                      sanitize.text.function = function(x) x)
+  })
   
   output$metric_description = renderUI({
     HTML(paste(paste("<b>", input$metric, "</b> is computed as"),
