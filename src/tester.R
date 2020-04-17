@@ -41,8 +41,8 @@ ui = dashboardPage(
                 column(width=3, selectInput("buffer_qc1", "Select buffer:", choices = c()) )
               ),
               box(
-                width = 4, status = "info", solidHeader = TRUE,
-                helpText("Distributions are displayed for all the data acquired since 2019-05-24. Red dashed line is displayed for good QC runs to indicate the selected QC run value."),
+                width = 3, status = "info", solidHeader = TRUE,
+                helpText("Distributions are displayed for all the data acquired since 2019-05-24. Red dashed line indicates selected QC run value."),
                 hr(),
                 selectInput("date", "Select run:", choices = c()),
                 hr(),
@@ -57,7 +57,7 @@ ui = dashboardPage(
               ),
               
               box(
-                width = 8, height = 620, status = "primary",
+                width = 9, height = 620, status = "primary",
                 plotOutput("summary_plot")
               )
             )
@@ -77,7 +77,7 @@ ui = dashboardPage(
                 width = 3, status = "info", solidHeader = TRUE,
                 helpText("Data since 2019-05-24 is shown with bad quality metrics excluded."),
                 hr(),
-                selectInput("metric", "Choose a QC characteristic:",
+                selectInput("metric", "Select metric:",
                             choices=qc_metrics_descriptions$names),  # date and quality cols excluded
                 hr(),
                 htmlOutput("metric_description"),
