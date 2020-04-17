@@ -98,16 +98,18 @@ ui = dashboardPage(
                 status = "info",
                 solidHeader = FALSE,
                 width = 12,
-                "Some text",  # TODO: add choice of buffer (enabled) and chemical mix (disabled)
+                column(width=3, shinyjs::useShinyjs(), shinyjs::disabled(textInput("chemical_mix", "Chemical mix:", "20190522_4GHz"))),
+                column(width=3, selectInput("buffer_qc3", "Select buffer:", choices = c()) )
               ),
               box(
                 width = 4, status = "primary",
-                "4 columns"  # TODO: add table of acquisition date, score, quality
+                div(style = 'overflow-x: scroll', tableOutput('table_info'))
               ),
               
               box(
                 width = 8, status = "primary",
-                div(style = 'overflow-x: scroll', tableOutput('table'))
+                div(style = 'overflow-x: scroll', tableOutput('table')),
+                # div(style = 'overflow-x: scroll', tableOutput('table_values')),
               )
               
             ))
@@ -133,6 +135,11 @@ server = function(input, output, session) {
     updateSelectInput(session, "buffer_qc2", choices = unique(qc_meta()["buffer_id"]) )
   })
   
+  observe({
+    # select buffer on QC summary tab
+    updateSelectInput(session, "buffer_qc3", choices = unique(qc_meta()["buffer_id"]) )
+  })
+  
   observe({ 
     # take meta ids of selected buffer
     qc_meta_ids = qc_meta()[qc_meta()["buffer_id"] == input$buffer_qc1, "id"]
@@ -140,14 +147,28 @@ server = function(input, output, session) {
     qc_metrics = qc_metrics()[qc_metrics()["meta_id"][[1]] %in% qc_meta_ids, ]
     
     # select date based on selected buffer
-    updateSelectInput(session, "date", choices = qc_metrics[rev(order(as.Date(qc_metrics$acquisition_date))), "acquisition_date"] ) })
+    updateSelectInput(session, "date", choices = qc_metrics[rev(order(as.Date(qc_metrics$acquisition_date))), "acquisition_date"] )
+  })
   
   
   output$distribution_plot = renderPlot({ plot_distribution_by_buffer(qc_metrics(), qc_meta(), qc_qualities(), input) })
-  
-  # output$chonological_plot = renderPlot({ plot_chronology(qc_metrics(), input) })
   output$chonological_plot = renderPlot({ plot_chronology_by_buffer(qc_metrics(), qc_meta(), qc_qualities(), input) })
   output$summary_plot = renderPlot({ plot_qc_summary_by_buffer(qc_metrics(), qc_meta(), input) }, height = 600)
+  
+  observe({
+    output$table_info = renderTable({ get_info_table(qc_metrics(), qc_meta(), qc_qualities(), input$buffer_qc3) },
+                                    hover = TRUE, bordered = TRUE,
+                                    spacing = 'xs', width = "auto", align = 'c',
+                                    sanitize.text.function = function(x) x)
+  })
+  
+ 
+
+  # output$table_values = renderTable({ make_ci_based_coloring_for_qc_table(qc_metrics()) },
+  #                                 hover = TRUE, bordered = TRUE,
+  #                                 spacing = 'xs', width = "auto", align = 'c',
+  #                                 sanitize.text.function = function(x) x)
+  # 
   
   output$table = renderTable({ make_ci_based_coloring_for_qc_table(qc_metrics()) },
                              hover = TRUE, bordered = TRUE,

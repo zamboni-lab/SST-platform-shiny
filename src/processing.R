@@ -214,8 +214,154 @@ get_run_score = function(qc_table, input){
   return(score)
 }
 
-color_qc_table = function(qc_table){
+
+get_confidence_interval = function(){
+  ## NOT IMPLEMENTED
+  ## I just think this piece of code will be useful for this function at some point
+  
+  # take meta ids of selected buffer
+  buffer_ids = meta_data[meta_data["buffer_id"] == input$buffer_qc2, "id"]
+  
+  # take entries of selected buffer
+  buffer_data = metrics_data[metrics_data["meta_id"][[1]] %in% buffer_ids, ]  # in metrics db
+  buffer_qualities = qualities_data[qualities_data["meta_id"][[1]] %in% buffer_ids, ]  # in qualities db
+  
+  # filter out "bad" runs according to general quality
+  general_good_data = buffer_data[buffer_qualities$quality == 1,]  # in metrics db
+  general_good_qualities = buffer_qualities[buffer_qualities$quality == 1,]  # in qualities db
+  
+  # take meta ids of runs with "good" quality of selected metric
+  good_quality_metric_ids = general_good_qualities[input$metric == 1, "meta_id"]
+  
+  # take "good" entries of selected metric
+  data = general_good_data[general_good_data[["meta_id"]] %in% good_quality_metric_ids,]
+}
+
+get_colored_table_for_metrics = function(metrics_data, meta_data, qualities_data){
+  ## TODO:
+  
+  
+  # take meta ids of selected buffer
+  buffer_ids = meta_data[meta_data["buffer_id"] == input$buffer_qc2, "id"]
+  
+  # take entries of selected buffer
+  buffer_data = metrics_data[metrics_data["meta_id"][[1]] %in% buffer_ids, ]  # in metrics db
+  buffer_qualities = qualities_data[qualities_data["meta_id"][[1]] %in% buffer_ids, ]  # in qualities db
+  
+  # filter out "bad" runs according to general quality
+  general_good_data = buffer_data[buffer_qualities$quality == 1,]  # in metrics db
+  general_good_qualities = buffer_qualities[buffer_qualities$quality == 1,]  # in qualities db
+  
+  # take meta ids of runs with "good" quality of selected metric
+  good_quality_metric_ids = general_good_qualities[input$metric == 1, "meta_id"]
+  
+  # take "good" entries of selected metric
+  data = general_good_data[general_good_data[["meta_id"]] %in% good_quality_metric_ids,]
+  
+  
+  
+  scoring = qc_table
+  
+  # metrics for which low values are warned
+  for (metric in c("resolution_200", "resolution_700", "signal", "s2b", "s2n")){
+    
+    all_previous_values = qc_table[1:nrow(qc_table)-1,]  # filter out last element
+    good_run_values = all_previous_values[all_previous_values["quality"] == 1, metric]  # use only good runs to calculate percentiles
+    values = good_run_values[good_run_values > 0]  # filter out missing values
+    
+    qs = quantile(values, c(.05, .25, .5, .75, .95))
+    
+    scoring[, metric] = ifelse (qc_table[, metric] > qs[2], 1, 0)  # score = 1 if it's within [0.25, 1.] percentiles
+    
+    qc_table[,metric] = paste(
+      '<div style="background-color: ',
+      ifelse (qc_table[,metric] > qs[3], "#AAFF8A",
+              ifelse (qc_table[,metric] <= qs[3] & qc_table[,metric] >= qs[2], "#FFFC9B", "#FF968D")),
+      '; border-radius: 5px;">',
+      round(qc_table[,metric], 4),
+      '</div>',
+      sep=''
+    )
+  }
+  
+  # metrics for which high values are warned
+  for (metric in c("average_accuracy", "chemical_dirt", "instrument_noise", "baseline_25_150", "baseline_50_150", "baseline_25_650", "baseline_50_650")){
+    
+    all_previous_values = qc_table[1:(nrow(qc_table)-1), ]  # filter out last run
+    good_run_values = all_previous_values[all_previous_values["quality"] == 1, metric]  # use only good runs to calculate percentiles
+    values = good_run_values[good_run_values > 0]  # filter out missing values
+    
+    qs = quantile(values, c(.05, .25, .5, .75, .95))
+    
+    scoring[, metric] = ifelse (qc_table[, metric] < qs[4], 1, 0)  # score = 1 if it's within [0., 0.75] percentiles
+    
+    qc_table[, metric] = paste(
+      '<div style="background-color: ',
+      ifelse (qc_table[,metric] < qs[3], "#AAFF8A",
+              ifelse (qc_table[,metric] >= qs[3] & qc_table[,metric] <= qs[4], "#FFFC9B", "#FF968D")),
+      '; border-radius: 5px;">',
+      round(qc_table[,metric], 4),
+      '</div>',
+      sep=''
+    )
+  }
+  
+  # metrics for which out of range values are warned
+  for (metric in c("isotopic_presence", "transmission", "fragmentation_305", "fragmentation_712")){
+    
+    all_previous_values = qc_table[1:(nrow(qc_table)-1), ]  # filter out last run
+    good_run_values = all_previous_values[all_previous_values["quality"] == 1, metric]  # use only good runs to calculate percentiles
+    values = good_run_values[good_run_values > 0]  # filter out missing values
+    
+    qs = quantile(values, c(.05, .25, .5, .75, .95))
+    
+    scoring[, metric] = ifelse (qc_table[, metric] > qs[1] & qc_table[, metric] < qs[5], 1, 0)  # score = 1 if it's within [0.05, 0.95] percentiles
+    
+    qc_table[,metric] = paste(
+      '<div style="background-color: ',
+      ifelse (qc_table[,metric] > qs[2] & qc_table[,metric] < qs[4], "#AAFF8A",
+              ifelse (qc_table[,metric] <= qs[1] | qc_table[,metric] >= qs[5], "#FF968D", "#FFFC9B")),
+      '; border-radius: 5px;">',
+      round(qc_table[,metric], 4),
+      '</div>',
+      sep=''
+    )
+  }
+  
+  
+}
+
+
+get_info_table = function(metrics_data, meta_data, qualities_data, selected_buffer){
   ## new version of coloring the table, based on the improved QC scoring
+  
+  # take meta ids of selected buffer
+  buffer_ids = meta_data[meta_data["buffer_id"] == selected_buffer, "id"]
+  
+  # take entries of selected buffer
+  buffer_data = metrics_data[metrics_data["meta_id"][[1]] %in% buffer_ids, ]  # in metrics db
+  buffer_qualities = qualities_data[qualities_data["meta_id"][[1]] %in% buffer_ids, ]  # in qualities db
+  
+  # sort both by acquisition_date
+  buffer_data = buffer_data[rev(order(as.Date(buffer_data$acquisition_date))),]
+  buffer_qualities = buffer_qualities[rev(order(as.Date(buffer_qualities$acquisition_date))),]
+  
+  # calculate scores
+  scores = apply(buffer_qualities[, 5:ncol(buffer_qualities)], 1, sum)
+  scores = paste(scores, "/", ncol(buffer_qualities)-4, sep="")
+  
+  # make info_table
+  info_table = data.frame(acquisition_date = substring(buffer_data$acquisition_date, 1, 10),
+                          score = scores,
+                          quality = buffer_data$quality)
+  
+  return(info_table)
+}
+
+
+color_qc_table = function(qc_table){
+  ## method was based on improved scoring
+  ## less strict that bootstrap with 80% confidence intervals
   
   scoring = qc_table
   
@@ -300,8 +446,8 @@ color_qc_table = function(qc_table){
 
 
 make_naive_coloring_for_qc_table = function(qc_table){
-  # old method, renamed into "naive"
-  # adds coloring for the table based on the simple QC score
+  ## old method, renamed into "naive"
+  ## adds coloring for the table based on the simple QC score
   
   scoring = qc_table
   
