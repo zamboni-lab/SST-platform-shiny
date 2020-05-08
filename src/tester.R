@@ -111,9 +111,8 @@ ui = dashboardPage(
               
               fluidRow(
                 box(
-                  width = 12, status = "primary",
-                  column(width=3, div(style = 'overflow-x: scroll', tableOutput('trends_table_info'))),
-                  column(width=9, div(style = 'overflow-x: scroll', tableOutput('trends_table_values')))
+                  width = 12, status = "warning",
+                  div(style = 'overflow-x: scroll', tableOutput('trends_table_values'))
                 )
               ),
               
@@ -122,16 +121,14 @@ ui = dashboardPage(
                   width = 3, status = "info", solidHeader = TRUE,
                   helpText("Data since 2019-05-24 is shown with bad quality metrics excluded."),
                   hr(),
-                  selectInput("metric", "Select metric:",
-                              choices=qc_metrics_descriptions$names),  # date and quality cols excluded
+                  selectInput("metric", "Select metric:", choices=qc_metrics_descriptions$metrics_names),  # date and quality cols excluded
                   hr(),
                   htmlOutput("metric_description"),
                   hr()
                 ),
                 box(
                   width = 9, status = "primary",
-                  plotOutput("chonological_plot"),
-                  plotOutput("distribution_plot")
+                  plotOutput("chonological_plot")
                 )
               )
             )
@@ -150,8 +147,6 @@ ui = dashboardPage(
                 column(width=3, div(style = 'overflow-x: scroll', tableOutput('table_info'))),
                 column(width=9, div(style = 'overflow-x: scroll', tableOutput('table_values')))
               )
-              
-              
             ))
   ))
 )
@@ -200,7 +195,7 @@ server = function(input, output, session) {
   output$number_of_negative_trends = renderValueBox({ valueBox(10 * 2, "Decreased", icon = icon("arrow-down"), color = "red") })
   output$number_of_unchanged_metrics = renderValueBox({ valueBox(10 * 2, "Unchanged", icon = icon("equals"), color = "light-blue") })
   
-  output$distribution_plot = renderPlot({ plot_distribution_by_buffer(qc_metrics(), qc_meta(), qc_qualities(), input) })
+  # TODO: refine this plot: add outliers, but mark them with red, and fix the y axis according to the most values 
   output$chonological_plot = renderPlot({ plot_chronology_by_buffer(qc_metrics(), qc_meta(), qc_qualities(), input) })
   output$summary_plot = renderPlot({ plot_qc_summary_by_buffer(qc_metrics(), qc_meta(), input) }, height = 600)
   
@@ -217,9 +212,16 @@ server = function(input, output, session) {
                                       sanitize.text.function = function(x) x)
   })
   
+  observe({
+    output$trends_table_values = renderTable({ get_trends_values_table_for_metrics(qc_metrics(), qc_meta(), input$buffer_qc2) },
+                                      hover = TRUE, bordered = TRUE,
+                                      spacing = 'xs', width = "auto", align = 'c',
+                                      sanitize.text.function = function(x) x)
+  })
+  
   output$metric_description = renderUI({
-    HTML(paste(paste("<b>", input$metric, "</b> is computed as"),
-               qc_metrics_descriptions[qc_metrics_descriptions$names == input$metric, "descriptions"], sep="<br/>"
+      HTML(paste(paste("<b>", input$metric, "</b> is computed as"),
+               qc_metrics_descriptions[qc_metrics_descriptions$metrics_names == input$metric, "descriptions"], sep="<br/>"
     ))
   })
   

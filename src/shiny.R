@@ -49,7 +49,7 @@ ui = dashboardPage(
               sidebarLayout(
                 sidebarPanel(
                   selectInput("metric", "Choose a QC characteristic:",
-                              choices=qc_metrics_descriptions$names),  # date and quality cols excluded
+                              choices=qc_metrics_descriptions$metrics_names),  # date and quality cols excluded
                   hr(),
                   helpText("Data since 2019-05-24 is shown with bad quality runs excluded."),
                   hr(),
@@ -96,7 +96,7 @@ server = function(input, output, session) {
   
   output$metric_description = renderUI({
     HTML(paste(paste("<b>", input$metric, "</b> is computed as"),
-               qc_metrics_descriptions[qc_metrics_descriptions$names == input$metric, "descriptions"], sep="<br/>"
+               qc_metrics_descriptions[qc_metrics_descriptions$metrics_names == input$metric, "descriptions"], sep="<br/>"
     ))
   })
   
