@@ -1,0 +1,847 @@
+2020-01-10T180904: input validation started for file 2019-05-24T121635
+Valid. Feature extraction started...
+Feature extraction finished, 14.835879802703857 seconds elapsed
+QC characteristics have been computed successfully
+New QC databases have been created (SQLite)
+
+2020-01-10T180928: input validation started for file 2019-05-25T192530
+Valid. Feature extraction started...
+Feature extraction finished, 15.118994951248169 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T180953: input validation started for file 2019-05-28T092335
+Valid. Feature extraction started...
+Feature extraction finished, 16.966325998306274 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181018: input validation started for file 2019-05-29T164545
+Valid. Feature extraction started...
+Feature extraction finished, 15.491751909255981 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181042: input validation started for file 2019-05-31T120157
+Valid. Feature extraction started...
+Feature extraction finished, 17.668931007385254 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181105: input validation started for file 2019-06-17T175027
+Valid. Feature extraction started...
+Feature extraction finished, 9.679982662200928 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181124: input validation started for file 2019-06-20T151846
+Valid. Feature extraction started...
+Feature extraction finished, 17.788851976394653 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181152: input validation started for file 2019-06-26T111121
+Valid. Feature extraction started...
+Feature extraction finished, 17.673419952392578 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181219: input validation started for file 2019-06-26T111255
+Valid. Feature extraction started...
+Feature extraction finished, 18.345508813858032 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181247: input validation started for file 2019-06-28T105235
+Valid. Feature extraction started...
+Feature extraction finished, 13.886492013931274 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181308: input validation started for file 2019-07-12T101256
+Valid. Feature extraction started...
+Feature extraction finished, 15.181643724441528 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181331: input validation started for file 2019-07-12T101330
+Valid. Feature extraction started...
+Feature extraction finished, 14.682048082351685 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181353: input validation started for file 2019-07-12T101401
+Valid. Feature extraction started...
+Feature extraction finished, 15.286789894104004 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181415: input validation started for file 2019-07-12T101431
+Valid. Feature extraction started...
+Feature extraction finished, 14.249051809310913 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181436: input validation started for file 2019-07-12T101459
+Valid. Feature extraction started...
+Feature extraction finished, 14.646535873413086 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181457: input validation started for file 2019-07-22T142639
+Valid. Feature extraction started...
+Feature extraction finished, 15.42013692855835 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181520: input validation started for file 2019-07-23T121551
+Valid. Feature extraction started...
+Feature extraction finished, 15.262870073318481 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181544: input validation started for file 2019-08-20T114638
+Valid. Feature extraction started...
+Feature extraction finished, 16.818794012069702 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181610: input validation started for file 2019-08-21T143245
+Valid. Feature extraction started...
+Feature extraction finished, 16.244206190109253 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181635: input validation started for file 2019-08-21T143320
+Valid. Feature extraction started...
+Feature extraction finished, 12.849606275558472 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181654: input validation started for file 2019-08-21T143405
+Valid. Feature extraction started...
+Feature extraction finished, 13.295414924621582 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181715: input validation started for file 2019-08-21T161009
+Valid. Feature extraction started...
+Feature extraction finished, 16.228454113006592 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181739: input validation started for file 2019-08-23T151450
+Valid. Feature extraction started...
+Feature extraction finished, 16.062462091445923 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181802: input validation started for file 2019-08-23T181742
+Valid. Feature extraction started...
+Feature extraction finished, 16.026945114135742 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181826: input validation started for file 2019-09-05T105856
+Valid. Feature extraction started...
+Feature extraction finished, 16.11920189857483 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181848: input validation started for file 2019-09-05T212603
+Valid. Feature extraction started...
+Feature extraction finished, 13.639293909072876 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181909: input validation started for file 2019-09-07T103807
+Valid. Feature extraction started...
+Feature extraction finished, 14.53689193725586 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181931: input validation started for file 2019-09-07T103834
+Valid. Feature extraction started...
+Feature extraction finished, 14.629332780838013 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T181952: input validation started for file 2019-09-09T155328
+Valid. Feature extraction started...
+Feature extraction finished, 14.156733989715576 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182014: input validation started for file 2019-09-09T155357
+Valid. Feature extraction started...
+Feature extraction finished, 15.325263261795044 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182037: input validation started for file 2019-09-09T155748
+Valid. Feature extraction started...
+Feature extraction finished, 15.210049152374268 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182059: input validation started for file 2019-09-09T155918
+Valid. Feature extraction started...
+Feature extraction finished, 16.009995937347412 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182123: input validation started for file 2019-09-09T155958
+Valid. Feature extraction started...
+Feature extraction finished, 16.72632908821106 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182148: input validation started for file 2019-09-10T141002
+Valid. Feature extraction started...
+Feature extraction finished, 14.407969951629639 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182210: input validation started for file 2019-09-27T144959
+Valid. Feature extraction started...
+Feature extraction finished, 15.389563083648682 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182232: input validation started for file 2019-09-28T161845
+Valid. Feature extraction started...
+Feature extraction finished, 13.645218133926392 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182253: input validation started for file 2019-10-31T142701
+Valid. Feature extraction started...
+Feature extraction finished, 14.425057888031006 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182316: input validation started for file 2019-11-02T130826
+Valid. Feature extraction started...
+Feature extraction finished, 15.257389068603516 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182338: input validation started for file 2019-11-05T143201
+Valid. Feature extraction started...
+Feature extraction finished, 11.595124006271362 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182356: input validation started for file 2019-11-08T124000
+Valid. Feature extraction started...
+Feature extraction finished, 14.776102781295776 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182415: input validation started for file 2019-11-08T131837
+Wrong number of scans in a run: 76
+File 2019-11-08T131837 omitted
+
+2020-01-10T182422: input validation started for file 2019-11-08T140824
+Valid. Feature extraction started...
+Feature extraction finished, 12.93897294998169 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182443: input validation started for file 2019-11-11T120614
+Valid. Feature extraction started...
+Feature extraction finished, 16.540934801101685 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182507: input validation started for file 2019-11-12T102201
+Valid. Feature extraction started...
+Feature extraction finished, 13.257472038269043 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182527: input validation started for file 2019-11-12T102256
+File with md5-hash corresponding to acquisition date 2019-11-06 13:57:28 is already in the database
+File 2019-11-12T102256 omitted
+
+2020-01-10T182535: input validation started for file 2019-11-12T150035
+Valid. Feature extraction started...
+Feature extraction finished, 17.134931802749634 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182559: input validation started for file 2019-11-16T110913
+File with md5-hash corresponding to acquisition date 2019-11-07 11:22:27 is already in the database
+File 2019-11-16T110913 omitted
+
+2020-01-10T182607: input validation started for file 2019-11-16T111253
+File with md5-hash corresponding to acquisition date 2019-11-12 14:41:56 is already in the database
+File 2019-11-16T111253 omitted
+
+2020-01-10T182615: input validation started for file 2019-11-16T111347
+File with md5-hash corresponding to acquisition date 2019-09-10 12:37:00 is already in the database
+File 2019-11-16T111347 omitted
+
+2020-01-10T182622: input validation started for file 2019-11-16T111432
+File with md5-hash corresponding to acquisition date 2019-11-05 10:55:13 is already in the database
+File 2019-11-16T111432 omitted
+
+2020-01-10T182629: input validation started for file 2019-11-16T111512
+File with md5-hash corresponding to acquisition date 2019-07-04 16:14:34 is already in the database
+File 2019-11-16T111512 omitted
+
+2020-01-10T182633: input validation started for file 2019-11-16T111555
+Wrong number of scans in a run: 76
+File 2019-11-16T111555 omitted
+
+2020-01-10T182640: input validation started for file 2019-11-16T113614
+File with md5-hash corresponding to acquisition date 2019-09-12 18:52:13 is already in the database
+File 2019-11-16T113614 omitted
+
+2020-01-10T182648: input validation started for file 2019-11-16T114626
+File with md5-hash corresponding to acquisition date 2019-11-11 11:52:16 is already in the database
+File 2019-11-16T114626 omitted
+
+2020-01-10T182657: input validation started for file 2019-11-16T114718
+File with md5-hash corresponding to acquisition date 2019-08-06 12:30:57 is already in the database
+File 2019-11-16T114718 omitted
+
+2020-01-10T182703: input validation started for file 2019-11-16T114810
+File with md5-hash corresponding to acquisition date 2019-09-05 21:11:30 is already in the database
+File 2019-11-16T114810 omitted
+
+2020-01-10T182710: input validation started for file 2019-11-16T114853
+File with md5-hash corresponding to acquisition date 2019-09-06 11:24:03 is already in the database
+File 2019-11-16T114853 omitted
+
+2020-01-10T182718: input validation started for file 2019-11-16T114939
+File with md5-hash corresponding to acquisition date 2019-09-05 10:52:22 is already in the database
+File 2019-11-16T114939 omitted
+
+2020-01-10T182725: input validation started for file 2019-11-16T115026
+File with md5-hash corresponding to acquisition date 2019-09-07 10:33:30 is already in the database
+File 2019-11-16T115026 omitted
+
+2020-01-10T182732: input validation started for file 2019-11-16T115143
+File with md5-hash corresponding to acquisition date 2019-09-12 18:52:13 is already in the database
+File 2019-11-16T115143 omitted
+
+2020-01-10T182739: input validation started for file 2019-11-16T123630
+File with md5-hash corresponding to acquisition date 2019-11-05 10:55:13 is already in the database
+File 2019-11-16T123630 omitted
+
+2020-01-10T182747: input validation started for file 2019-11-16T123711
+File with md5-hash corresponding to acquisition date 2019-09-10 12:37:00 is already in the database
+File 2019-11-16T123711 omitted
+
+2020-01-10T182753: input validation started for file 2019-11-16T123757
+File with md5-hash corresponding to acquisition date 2019-07-22 14:22:41 is already in the database
+File 2019-11-16T123757 omitted
+
+2020-01-10T182800: input validation started for file 2019-11-16T123839
+File with md5-hash corresponding to acquisition date 2019-07-04 16:14:34 is already in the database
+File 2019-11-16T123839 omitted
+
+2020-01-10T182808: input validation started for file 2019-11-16T123924
+File with md5-hash corresponding to acquisition date 2019-11-12 14:41:56 is already in the database
+File 2019-11-16T123924 omitted
+
+2020-01-10T182816: input validation started for file 2019-11-16T124012
+File with md5-hash corresponding to acquisition date 2019-08-21 16:06:08 is already in the database
+File 2019-11-16T124012 omitted
+
+2020-01-10T182820: input validation started for file 2019-11-16T124058
+Wrong number of scans in a run: 76
+File 2019-11-16T124058 omitted
+
+2020-01-10T182827: input validation started for file 2019-11-16T124135
+Valid. Feature extraction started...
+Feature extraction finished, 14.048858880996704 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182849: input validation started for file 2019-11-16T124218
+File with md5-hash corresponding to acquisition date 2019-11-11 11:52:16 is already in the database
+File 2019-11-16T124218 omitted
+
+2020-01-10T182857: input validation started for file 2019-11-17T135753
+Valid. Feature extraction started...
+Feature extraction finished, 15.300771951675415 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182920: input validation started for file 2019-11-19T142033
+Valid. Feature extraction started...
+Feature extraction finished, 16.543832778930664 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T182945: input validation started for file 2019-11-19T142127
+Valid. Feature extraction started...
+Feature extraction finished, 16.79593777656555 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T183009: input validation started for file 2019-11-25T184135
+Valid. Feature extraction started...
+Feature extraction finished, 15.170993328094482 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T183031: input validation started for file 2019-12-08T193254
+Valid. Feature extraction started...
+Feature extraction finished, 16.393285751342773 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T183055: input validation started for file 2019-12-10T185802
+Valid. Feature extraction started...
+Feature extraction finished, 15.171266078948975 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T183118: input validation started for file 2019-12-12T114247
+Valid. Feature extraction started...
+Feature extraction finished, 15.193007230758667 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T183140: input validation started for file 2019-12-20T104143
+Valid. Feature extraction started...
+Feature extraction finished, 17.2272367477417 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T183205: input validation started for file 2019-12-21T163957
+Valid. Feature extraction started...
+Feature extraction finished, 16.625786066055298 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-01-10T183230: input validation started for file 2020-01-09T171918
+Valid. Feature extraction started...
+Feature extraction finished, 15.588299989700317 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-11T153837: input validation started for file 20200125_4GHz_holbrooksmith_20200125.d
+Valid. Feature extraction started...
+Feature extraction finished, 18.877241849899292 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-11T154023: input validation started for file 20190522_4GHz_Ortmayr.d
+Valid. Feature extraction started...
+Feature extraction finished, 17.819429636001587 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-11T154055: input validation started for file 20200130_EDR_Sammy_001.d
+Valid. Feature extraction started...
+Feature extraction finished, 12.717519760131836 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-11T154124: input validation started for file 20190522_4GHz_Reid_001.d
+Valid. Feature extraction started...
+Feature extraction finished, 17.762032508850098 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-11T154158: input validation started for file 20190522_4GHz_Duncan_20200206.d
+Valid. Feature extraction started...
+Feature extraction finished, 18.881661891937256 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-11T154234: input validation started for file 20200202_4GHz_holbrooksmith_20190522.d
+Valid. Feature extraction started...
+Feature extraction finished, 19.192908763885498 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-11T160732: input validation started for file 20190522_4GHz_Toby.d
+Valid. Feature extraction started...
+Feature extraction finished, 19.944806575775146 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-11T160809: input validation started for file 20190522_4GHz_TobySeconed.d
+Valid. Feature extraction started...
+Feature extraction finished, 19.119059324264526 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-13T141454: input validation started for file 20190522_4GHz_Stephan.d
+Valid. Feature extraction started...
+Feature extraction finished, 14.687105894088745 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-16T213412: input validation started for file 20190522_4GHz_Masiero_000181.d
+Valid. Feature extraction started...
+Feature extraction finished, 14.781997442245483 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-18T205007: input validation started for file 20190522_4GHz_Masiero_000171.d
+Valid. Feature extraction started...
+Feature extraction finished, 13.946630239486694 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-19T163959: input validation started for file 20190522_4GHz_Reid_001.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.674123525619507 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-20T225209: input validation started for file 20190522_4GHz_Reid_001.d
+Valid. Feature extraction started...
+Feature extraction finished, 9.065067052841187 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-22T222824: input validation started for file 20190522_4GHz_Reid_001.d
+Valid. Feature extraction started...
+Feature extraction finished, 13.970033407211304 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-23T140500: input validation started for file 20190522_4GHz_Reid_001.d
+Valid. Feature extraction started...
+Feature extraction finished, 13.529097557067871 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-24T150414: input validation started for file 20190512_Mauro_15431.d
+Valid. Feature extraction started...
+Feature extraction finished, 14.576708316802979 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-02-25T111315: input validation started for file 20190522_4GHz_Masiero_200225.d
+Valid. Feature extraction started...
+Feature extraction finished, 14.783021926879883 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-02T164650: input validation started for file 20190522_4GHz_Ortmayr_20200302.d
+Valid. Feature extraction started...
+Feature extraction finished, 16.255192041397095 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-03T170304: input validation started for file 20190522_4GHz_SD.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.909806966781616 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-04T123649: input validation started for file 20190522_4GHz_Reid_001.d
+Valid. Feature extraction started...
+Feature extraction finished, 14.18170714378357 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-05T092945: input validation started for file 20190522_4GHz_Nicola_003.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.328219175338745 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-08T192503: input validation started for file 20190522_4GHz_Ortmayr_20200308.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.265321969985962 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-09T103508: input validation started for file 20190522_4GHz_Wamer_002.d
+Valid. Feature extraction started...
+Feature extraction finished, 14.476724863052368 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-11T104322: input validation started for file 20190522_4GHz_Ortmayr_20200311.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.544297695159912 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-12T113243: input validation started for file 20190522_4GHz_Rahm_001.d
+Valid. Feature extraction started...
+Feature extraction finished, 16.159054040908813 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-14T193948: input validation started for file 20190522_4GHz_Reid_001.d
+Valid. Feature extraction started...
+Feature extraction finished, 14.729627132415771 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-14T200626: input validation started for file 20190522_4GHz_Reid_001.d
+Valid. Feature extraction started...
+Feature extraction finished, 16.809499740600586 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-14T215123: input validation started for file 20190522_4GHz_Reid_001.d
+Valid. Feature extraction started...
+Feature extraction finished, 14.904022693634033 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-16T111804: input validation started for file 20190522_4GHz_Rahm_002.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.158510446548462 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-21T110711: input validation started for file 20190522_4GHz_Reid0110_001.d
+Valid. Feature extraction started...
+Feature extraction finished, 14.305835008621216 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-21T110743: input validation started for file 20190522_4GHz_Reid0124_002.d
+Valid. Feature extraction started...
+Feature extraction finished, 13.605144262313843 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-21T111011: input validation started for file 20190522_4GHz_Reid0124_003.d
+Valid. Feature extraction started...
+Feature extraction finished, 12.873107194900513 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-21T111043: input validation started for file 20190522_4GHz_Reid0219_001.d
+File with md5-hash corresponding to acquisition date 2020-02-19 16:34:11 is already in the database
+File 20190522_4GHz_Reid0219_001.d omitted
+
+2020-03-21T111103: input validation started for file 20190522_4GHz_Reid0219_002.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.341551065444946 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-21T111133: input validation started for file 20190522_4GHz_Reid0220_001.d
+File with md5-hash corresponding to acquisition date 2020-02-20 22:46:31 is already in the database
+File 20190522_4GHz_Reid0220_001.d omitted
+
+2020-03-21T111151: input validation started for file 20190522_4GHz_Reid0222_001.d
+File with md5-hash corresponding to acquisition date 2020-02-22 22:24:18 is already in the database
+File 20190522_4GHz_Reid0222_001.d omitted
+
+2020-03-21T111209: input validation started for file 20190522_4GHz_Reid0223_001.d
+File with md5-hash corresponding to acquisition date 2020-02-23 13:59:13 is already in the database
+File 20190522_4GHz_Reid0223_001.d omitted
+
+2020-03-21T111227: input validation started for file 20190522_4GHz_Reid0304_001.d
+File with md5-hash corresponding to acquisition date 2020-03-04 12:32:19 is already in the database
+File 20190522_4GHz_Reid0304_001.d omitted
+
+2020-03-21T111245: input validation started for file 20190522_4GHz_Reid0314_001.d
+File with md5-hash corresponding to acquisition date 2020-03-14 21:46:14 is already in the database
+File 20190522_4GHz_Reid0314_001.d omitted
+
+2020-03-24T191808: input validation started for file 20190522_4GHz_Reid_001.d
+File with md5-hash corresponding to acquisition date 2020-01-23 00:11:05 is already in the database
+File 20190522_4GHz_Reid_001.d omitted
+
+2020-03-30T170833: input validation started for file 20190522_4Ghz_Masiero_20200330.d
+Valid. Feature extraction started...
+Feature extraction finished, 16.861779928207397 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-03-31T120715: input validation started for file 20190522_4Ghz_Masiero_20200331.d
+Valid. Feature extraction started...
+Feature extraction finished, 16.583887100219727 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-01T113258: input validation started for file 20190522_4Ghz_Masiero_20200401.d
+Valid. Feature extraction started...
+Feature extraction finished, 16.65318489074707 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-02T120328: input validation started for file 20190522_4Ghz_Masiero_20200402.d
+Valid. Feature extraction started...
+Feature extraction finished, 16.411144495010376 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-03T114228: input validation started for file 20190522_4Ghz_Masiero_20200403.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.212595701217651 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-04T122619: input validation started for file 20190522_4Ghz_Masiero_20200404.d
+Valid. Feature extraction started...
+Feature extraction finished, 16.203710794448853 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-05T111018: input validation started for file 20190522_4Ghz_Masiero_20200405.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.646957397460938 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-06T111912: input validation started for file 20190522_4Ghz_Masiero_20200406.d
+Valid. Feature extraction started...
+Feature extraction finished, 16.303227186203003 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-07T112938: input validation started for file 20190522_4Ghz_Masiero_20200407.d
+Valid. Feature extraction started...
+Feature extraction finished, 16.027353048324585 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-08T114047: input validation started for file 20190522_4Ghz_Masiero_20200408.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.996573686599731 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-09T121232: input validation started for file 20190522_4Ghz_Masiero_20200409.d
+Valid. Feature extraction started...
+Feature extraction finished, 16.02953600883484 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-10T112407: input validation started for file 20190522_4Ghz_Masiero_20200410.d
+Valid. Feature extraction started...
+Feature extraction finished, 16.206515073776245 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-11T113218: input validation started for file 20190522_4Ghz_Masiero_20200411.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.633909702301025 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-12T145045: input validation started for file 20190522_4Ghz_Masiero_20200412.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.538015604019165 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-13T113839: input validation started for file 20190522_4Ghz_Masiero_20200413.d
+Valid. Feature extraction started...
+Feature extraction finished, 14.73700737953186 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-14T120608: input validation started for file 20190522_4Ghz_Masiero_20200414.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.566349506378174 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-15T205039: input validation started for file 20190522_4Ghz_Masiero_20200415.d
+Valid. Feature extraction started...
+Feature extraction finished, 13.958587884902954 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-16T192439: input validation started for file 20190522_4Ghz_Masiero_20200416.d
+Valid. Feature extraction started...
+Feature extraction finished, 14.024341821670532 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-18T113516: input validation started for file 20190522_4Ghz_Masiero_20200418.d
+Valid. Feature extraction started...
+Unexpected error occured!
+Traceback (most recent call last):
+  File "/home/nzadmin/msqc/msfe/msfe.py", line 841, in extract_features_from_ms_run
+    scan_features, main_features_names = extract_main_features_from_scan(spectra[scan_index],scan_type='normal')
+  File "/home/nzadmin/msqc/msfe/msfe.py", line 653, in extract_main_features_from_scan
+    peak_fit, peak_features = fit_peak_and_extract_features(actual_peaks[i], spectrum, corrected_centroids_indexes)
+  File "/home/nzadmin/msqc/msfe/msfe.py", line 187, in fit_peak_and_extract_features
+    fitted_mz, fitted_intensity, fit_info = get_peak_fit(spectrum, actual_peak)
+  File "/home/nzadmin/msqc/msfe/msfe.py", line 159, in get_peak_fit
+    signal_fit_mass_diff = float(x[numpy.where(y == max(y))] - predicted_peak_mz)
+TypeError: only size-1 arrays can be converted to Python scalars
+File 20190522_4Ghz_Masiero_20200418.d omitted
+
+2020-04-18T114046: input validation started for file 20190522_4Ghz_Masiero_20200418.d
+Valid. Feature extraction started...
+Unexpected error occured!
+Traceback (most recent call last):
+  File "/home/nzadmin/msqc/msfe/msfe.py", line 841, in extract_features_from_ms_run
+    scan_features, main_features_names = extract_main_features_from_scan(spectra[scan_index],scan_type='normal')
+  File "/home/nzadmin/msqc/msfe/msfe.py", line 653, in extract_main_features_from_scan
+    peak_fit, peak_features = fit_peak_and_extract_features(actual_peaks[i], spectrum, corrected_centroids_indexes)
+  File "/home/nzadmin/msqc/msfe/msfe.py", line 187, in fit_peak_and_extract_features
+    fitted_mz, fitted_intensity, fit_info = get_peak_fit(spectrum, actual_peak)
+  File "/home/nzadmin/msqc/msfe/msfe.py", line 159, in get_peak_fit
+    signal_fit_mass_diff = float(x[numpy.where(y == max(y))] - predicted_peak_mz)
+TypeError: only size-1 arrays can be converted to Python scalars
+File 20190522_4Ghz_Masiero_20200418.d omitted
+
+2020-04-19T105705: input validation started for file 20190522_4Ghz_Masiero_20200418.d
+Valid. Feature extraction started...
+Unexpected error occured!
+Traceback (most recent call last):
+  File "/home/nzadmin/msqc/msfe/msfe.py", line 841, in extract_features_from_ms_run
+    scan_features, main_features_names = extract_main_features_from_scan(spectra[scan_index],scan_type='normal')
+  File "/home/nzadmin/msqc/msfe/msfe.py", line 653, in extract_main_features_from_scan
+    peak_fit, peak_features = fit_peak_and_extract_features(actual_peaks[i], spectrum, corrected_centroids_indexes)
+  File "/home/nzadmin/msqc/msfe/msfe.py", line 187, in fit_peak_and_extract_features
+    fitted_mz, fitted_intensity, fit_info = get_peak_fit(spectrum, actual_peak)
+  File "/home/nzadmin/msqc/msfe/msfe.py", line 159, in get_peak_fit
+    signal_fit_mass_diff = float(x[numpy.where(y == max(y))] - predicted_peak_mz)
+TypeError: only size-1 arrays can be converted to Python scalars
+File 20190522_4Ghz_Masiero_20200418.d omitted
+
+2020-04-19T120942: input validation started for file 20190522_4Ghz_Masiero_20200419.d
+Valid. Feature extraction started...
+Feature extraction finished, 13.894328117370605 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-20T121334: input validation started for file 20190522_4Ghz_Masiero_20200420.d
+Valid. Feature extraction started...
+Feature extraction finished, 14.182459354400635 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-27T181402: input validation started for file 20190522_4GHz_Fuhrer_2.d
+Valid. Feature extraction started...
+Feature extraction finished, 11.947260856628418 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-27T181432: input validation started for file 20190522_4GHz_Fuhrer_1.d
+Valid. Feature extraction started...
+Feature extraction finished, 11.757542133331299 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-29T185008: input validation started for file 20190522_4GHz_Fuhrer_2.d
+Valid. Feature extraction started...
+Feature extraction finished, 12.226759195327759 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-04-29T185039: input validation started for file 20190522_4GHz_Fuhrer_1.d
+Valid. Feature extraction started...
+Feature extraction finished, 11.951182842254639 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+2020-05-08T182033: input validation started for file 20190522_4Ghz_Masiero_20200418.d
+Valid. Feature extraction started...
+Feature extraction finished, 16.130388975143433 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+

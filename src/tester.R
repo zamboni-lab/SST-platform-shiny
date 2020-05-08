@@ -33,63 +33,109 @@ ui = dashboardPage(
             fluidPage(
               titlePanel("QC Summary"),
               
-              box(
-                status = "info",
-                solidHeader = FALSE,
-                width = 12,
-                column(width=3, shinyjs::useShinyjs(), shinyjs::disabled(textInput("chemical_mix", "Chemical mix:", "20190522_4GHz"))),
-                column(width=3, selectInput("buffer_qc1", "Select buffer:", choices = c()) )
-              ),
-              box(
-                width = 3, status = "info", solidHeader = TRUE,
-                helpText("Distributions are displayed for all the data acquired since 2019-05-24. Red dashed line indicates selected QC run value."),
-                hr(),
-                selectInput("date", "Select run:", choices = c()),
-                hr(),
-                htmlOutput("score"),
-                hr(),
-                radioButtons("quality", "Change quality:", choices = list("Good" = 1, "Bad" = 0),
-                             selected = 1),
-                textInput("comment", "Comment:", ""),
-                tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("add_button", function(message) {eval(message.value);});'))),
-                actionButton("comment_button", "Add metadata"),
-                hr()
+              fluidRow(
+                
+                box(
+                  status = "info",
+                  solidHeader = FALSE,
+                  width = 6,
+                  style = "height:130px;",
+                  column(width=6, shinyjs::useShinyjs(), shinyjs::disabled(textInput("chemical_mix", "Chemical mix:", "20190522_4GHz"))),
+                  column(width=6, selectInput("buffer_qc1", "Select buffer:", choices = c()) )
+                ),
+                
+                box(
+                  status = "warning",
+                  solidHeader = FALSE,
+                  width = 6,
+                  style = "height:130px;",
+                  valueBoxOutput("number_of_good_runs"),
+                  valueBoxOutput("number_of_bad_runs"),
+                  valueBoxOutput("number_of_recent_runs")
+                )
               ),
               
-              box(
-                width = 9, height = 620, status = "primary",
-                plotOutput("summary_plot")
+              fluidRow(
+                box(
+                  width = 3, 
+                  style = "height:620px;",
+                  status = "info", 
+                  solidHeader = TRUE,
+                  helpText("Distributions are displayed for all the data acquired since 2019-05-24. Red dashed line indicates selected QC run value."),
+                  hr(),
+                  selectInput("date", "Select run:", choices = c()),
+                  hr(),
+                  htmlOutput("score"),
+                  hr(),
+                  radioButtons("quality", "Change quality:", choices = list("Good" = 1, "Bad" = 0),
+                               selected = 1),
+                  textInput("comment", "Comment:", ""),
+                  tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("add_button", function(message) {eval(message.value);});'))),
+                  actionButton("comment_button", "Add metadata"),
+                  hr()
+                ),
+                box(
+                  width = 9, 
+                  style = "height:620px;",
+                  status = "primary",
+                  plotOutput("summary_plot")
+                )
               )
+              
+              
             )
     ),
     
     tabItem(tabName = "qc2",
             fluidPage(
               titlePanel("QC Trends"),
-              box(
-                status = "info",
-                solidHeader = FALSE,
-                width = 12,
-                column(width=3, shinyjs::useShinyjs(), shinyjs::disabled(textInput("chemical_mix", "Chemical mix:", "20190522_4GHz"))),
-                column(width=3, selectInput("buffer_qc2", "Select buffer:", choices = c()) )
-              ),
-              box(
-                width = 3, status = "info", solidHeader = TRUE,
-                helpText("Data since 2019-05-24 is shown with bad quality metrics excluded."),
-                hr(),
-                selectInput("metric", "Select metric:",
-                            choices=qc_metrics_descriptions$names),  # date and quality cols excluded
-                hr(),
-                htmlOutput("metric_description"),
-                hr()
+              fluidRow(
+                box(
+                  status = "info",
+                  solidHeader = FALSE,
+                  width = 6,
+                  style = "height:130px;",
+                  column(width=6, shinyjs::useShinyjs(), shinyjs::disabled(textInput("chemical_mix", "Chemical mix:", "20190522_4GHz"))),
+                  column(width=6, selectInput("buffer_qc2", "Select buffer:", choices = c()) )
+                ),
+                box(
+                  status = "warning",
+                  solidHeader = FALSE,
+                  width = 6,
+                  style = "height:130px;",
+                  valueBoxOutput("number_of_positive_trends"),
+                  valueBoxOutput("number_of_negative_trends"),
+                  valueBoxOutput("number_of_unchanged_metrics")
+                )
               ),
               
-              box(
-                width = 9, status = "primary",
-                plotOutput("chonological_plot"),
-                plotOutput("distribution_plot")
+              fluidRow(
+                box(
+                  width = 12, status = "primary",
+                  column(width=3, div(style = 'overflow-x: scroll', tableOutput('trends_table_info'))),
+                  column(width=9, div(style = 'overflow-x: scroll', tableOutput('trends_table_values')))
+                )
+              ),
+              
+              fluidRow(
+                box(
+                  width = 3, status = "info", solidHeader = TRUE,
+                  helpText("Data since 2019-05-24 is shown with bad quality metrics excluded."),
+                  hr(),
+                  selectInput("metric", "Select metric:",
+                              choices=qc_metrics_descriptions$names),  # date and quality cols excluded
+                  hr(),
+                  htmlOutput("metric_description"),
+                  hr()
+                ),
+                box(
+                  width = 9, status = "primary",
+                  plotOutput("chonological_plot"),
+                  plotOutput("distribution_plot")
+                )
               )
-            )),
+            )
+          ),
     
     tabItem(tabName = "qc3",
             fluidPage(
@@ -144,6 +190,15 @@ server = function(input, output, session) {
     updateSelectInput(session, "date", choices = qc_metrics[rev(order(as.Date(qc_metrics$acquisition_date))), "acquisition_date"] )
   })
   
+  # TODO: compute values for boxes
+  output$number_of_good_runs = renderValueBox({ valueBox(10 * 2, "Total \"good\"", icon = icon("database"), color = "green") })
+  output$number_of_bad_runs = renderValueBox({ valueBox(10 * 2, "Total \"bad\"", icon = icon("database"), color = "red") })
+  output$number_of_recent_runs = renderValueBox({ valueBox(3, "days since", icon = icon("file-upload"), color = "light-blue") })
+  
+  # TODO: compute values for boxes
+  output$number_of_positive_trends = renderValueBox({ valueBox(10 * 2, "Increased", icon = icon("arrow-up"), color = "green") })
+  output$number_of_negative_trends = renderValueBox({ valueBox(10 * 2, "Decreased", icon = icon("arrow-down"), color = "red") })
+  output$number_of_unchanged_metrics = renderValueBox({ valueBox(10 * 2, "Unchanged", icon = icon("equals"), color = "light-blue") })
   
   output$distribution_plot = renderPlot({ plot_distribution_by_buffer(qc_metrics(), qc_meta(), qc_qualities(), input) })
   output$chonological_plot = renderPlot({ plot_chronology_by_buffer(qc_metrics(), qc_meta(), qc_qualities(), input) })
