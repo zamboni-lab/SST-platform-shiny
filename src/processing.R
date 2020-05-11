@@ -279,7 +279,7 @@ get_trends_table_for_a_subset = function(data, date_since){
                         recent_data$acquisition_date[1:length(recent_data$acquisition_date)-1], units = "days")
   
   # compute the entire time axis
-  for (i in 2:length(days_diffs)){ days_diffs[i] = sum(days_diffs[1:i]) }
+  for (i in 2:length(days_diffs)){ days_diffs[i] = days_diffs[i-1] + days_diffs[i] }
   days_diffs = c(0, days_diffs)
   
   result = data.frame(matrix(ncol = length(metrics_names), nrow = 1))
@@ -294,7 +294,7 @@ get_trends_table_for_a_subset = function(data, date_since){
       # if there's at least two point in recent subset, then fit and define
       
       # TODO: test the linear fit itself (maybe it's different to python)
-      linear_model = lm(x ~ y)
+      linear_model = lm(y ~ x)
       score = summary(linear_model)$r.squared
       coeff = linear_model$coefficients[2]
       
