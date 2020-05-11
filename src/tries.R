@@ -1,35 +1,69 @@
 
-path = "/Users/andreidm/ETH/projects/shiny_qc/data/nas2_qc_metrics_database_apr16.sqlite"
+path = "/Users/andreidm/ETH/projects/shiny_qc/data/nas2_qc_metrics_database_may8.sqlite"
 meta_data = as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_meta'))
 metrics_data = as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_metrics'))
 qualities_data = as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_metrics_qualities'))
 
 
+data = metrics_data = metrics_data[order(metrics_data$acquisition_date), ]
+date_since = "2020-04-13"
 
+recent_data = data[data$acquisition_date >= date_since, ]
 
-idx = meta_data[meta_data["buffer_id"] == "IPA_H2O_DMSO", "id"]
+# compute time intervals between measurements in days
+days_diffs = difftime(recent_data$acquisition_date[2:length(recent_data$acquisition_date)],
+                      recent_data$acquisition_date[1:length(recent_data$acquisition_date)-1], units = "days")
 
-metrics_data[metrics_data$meta_id %in% idx, ]
-
-metrics_data$meta_id == 86
-
-qc_meta_ids = data[data["buffer_id"] == input$buffer, "id"]  # take meta ids of selected buffer
-qc_metrics = qc_metrics()[qc_metrics()["meta_id"] == qc_meta_ids, ]  # take entries of selected buffer in metrics db
-
-library(boot)
-
-get_mean = function(data, index){
-  return(mean(data[index]))
+# compute the entire time axis
+for (i in 2:length(days_diffs)){ 
+  days_diffs[i] = days_diffs[i-1] + days_diffs[i]
 }
+days_diffs = c(0, days_diffs)
 
-data.boot = boot(data[,5], function(data, index) mean(data[index]), R=5000)
-boot.res = boot.ci(data.boot, conf = 0.95, type = "all")
-ci = c(boot.res$bca[4], boot.res$bca[5])
+result = data.frame(matrix(ncol = length(metrics_names), nrow = 1))
+colnames(result) = metrics_names
+
+metric = "isotopic_presence"
+
+y = scale(recent_data[recent_data[metric] > 0, metric])
+x = days_diffs[recent_data[metric] > 0]
+
+linear_model = lm(y ~ x)
+summary(linear_model)$r.squared
+linear_model$coefficients[2]
+
+plot(x, y)
+abline(linear_model)
 
 
-boot.res$normal
-boot.res$basic
-boot.res$bca[5]
-boot.res$percent
-
-?boot.ci
+for (metric in metrics_names){
+  
+  y = scale(recent_data[recent_data[metric] > 0, metric])
+  x = days_diffs[recent_data[metric] > 0]
+  
+  if (length(x) >= 2 & length(y) >= 2){
+    # if there's at least two point in recent subset, then fit and define
+    
+    # TODO: test the linear fit itself (maybe it's different to python)
+    linear_model = lm(x ~ y)
+    score = summary(linear_model)$r.squared
+    coeff = linear_model$coefficients[2]
+    
+    if (score >= 0.01){
+      if (abs(coeff) >= 0.05){
+        if (coeff < 0){
+          result[1, metric] = '<div style="font-size: 100%; font-weight: bold"> &#8600; </div>'  # arrow down
+        } else {
+          result[1, metric] = '<div style="font-size: 100%; font-weight: bold"> &#8599; </div>'  # arrow up
+        }
+      } else {
+        result[1, metric] = '<div style="font-size: 100%; font-weight: bold"> &#8909; </div>'  # almost equals
+      }
+    } else {
+      result[1, metric] = '<dic style="font-size: 100%; font-weight: bold"> &#8909; </div>'   # almost equals
+    }
+  } else {
+    # otherwise, set to "none" symbol
+    result[1, metric] = '<dic style="font-size: 100%; font-weight: bold"> &#8709; </div>'   # empty
+  }
+}

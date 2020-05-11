@@ -293,7 +293,6 @@ get_trends_table_for_a_subset = function(data, date_since){
     if (length(x) >= 2 & length(y) >= 2){
       # if there's at least two point in recent subset, then fit and define
       
-      # TODO: test the linear fit itself (maybe it's different to python)
       linear_model = lm(y ~ x)
       score = summary(linear_model)$r.squared
       coeff = linear_model$coefficients[2]
