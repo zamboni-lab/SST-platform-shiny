@@ -315,15 +315,8 @@ get_trends_table_for_a_subset = function(data, date_since){
       # otherwise, set to "none" symbol
       result[1, metric] = '<dic style="font-size: 100%; font-weight: bold"> &#8709; </div>'   # empty
     }
-    
-    
-    
-    
   }
-    
-   
   return(result)
-  
 }
 
 get_trends_values_table_for_metrics = function(metrics_data, meta_data, selected_buffer){

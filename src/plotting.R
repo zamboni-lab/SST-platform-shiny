@@ -50,7 +50,7 @@ plot_chronology_by_buffer = function(metrics_data, meta_data, qualities_data, in
   data = general_good_data[general_good_qualities[input$metric] == 1,]
   
   # sort by date
-  data = data[rev(order(as.Date(data$acquisition_date))),]
+  data = data[rev(order(data$acquisition_date)),]
   data = na.omit(data[1:50,])  # plot only last 50 runs (otherwise it's squeezed too much)
   
   ggplot(data, aes(x = acquisition_date, y = eval(parse(text=input$metric)))) +
@@ -83,7 +83,7 @@ plot_chronology = function(data, input){
   ## plots chronological values of a QC characteristic given data and user input
   
   data = data[data$quality == 1,]  # only good runs are used for plotting
-  data = data[rev(order(as.Date(data$acquisition_date))),]  # sort by date
+  data = data[rev(order(data$acquisition_date)),]  # sort by date
   data = na.omit(data[1:50,])  # plot only last 50 runs (otherwise it's squeezed too much)
   
   
