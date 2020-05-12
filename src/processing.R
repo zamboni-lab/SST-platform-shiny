@@ -348,7 +348,6 @@ get_trends_values_table_for_metrics = function(metrics_data, meta_data, selected
     
 }
 
-
 get_info_table = function(metrics_data, meta_data, qualities_data, selected_buffer){
   ## new version of coloring the table, based on the improved QC scoring
   

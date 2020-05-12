@@ -111,14 +111,8 @@ ui = dashboardPage(
               
               fluidRow(
                 box(
-                  width = 12, status = "warning",
-                  div(style = 'overflow-x: scroll', tableOutput('trends_table_values'))
-                )
-              ),
-              
-              fluidRow(
-                box(
                   width = 3, status = "info", solidHeader = TRUE,
+                  style = "height:450px;",
                   helpText("Data since 2019-05-24 is shown with bad quality metrics excluded."),
                   hr(),
                   selectInput("metric", "Select metric:", choices=qc_metrics_descriptions$metrics_names),  # date and quality cols excluded
@@ -128,11 +122,29 @@ ui = dashboardPage(
                 ),
                 box(
                   width = 9, status = "primary",
+                  style = "height:450px;",
                   plotOutput("chonological_plot")
                 )
+              ),
+              
+              fluidRow(
+                box(
+                  width = 12, status = "primary",
+                  div(style = 'overflow-x: scroll', tableOutput('trends_table_values'))
+                )
+              ),
+              
+              fluidRow(
+                box(
+                  width = 12, status = "primary",
+                  column(width=6, plotOutput("two_weeks_trend_plot")),
+                  column(width=6, plotOutput("one_month_trend_plot"))
+                  # column(width=4, plotOutput("two_months_trend_plot"))
+                  )
+                )
               )
-            )
-          ),
+              
+            ),
     
     tabItem(tabName = "qc3",
             fluidPage(
@@ -196,8 +208,11 @@ server = function(input, output, session) {
   output$number_of_unchanged_metrics = renderValueBox({ valueBox(10 * 2, "Unchanged", icon = icon("equals"), color = "light-blue") })
   
   # TODO: refine this plot: add outliers, but mark them with red, and fix the y axis according to the most values 
-  output$chonological_plot = renderPlot({ plot_chronology_by_buffer(qc_metrics(), qc_meta(), qc_qualities(), input) })
+  output$chonological_plot = renderPlot({ plot_chronology_by_buffer(qc_metrics(), qc_meta(), qc_qualities(), input) }, height = 430)
   output$summary_plot = renderPlot({ plot_qc_summary_by_buffer(qc_metrics(), qc_meta(), input) }, height = 600)
+  
+  output$two_weeks_trend_plot = renderPlot({ plot_linear_trend(qc_metrics(), qc_meta(), "2 weeks", input) })
+  output$one_month_trend_plot = renderPlot({ plot_linear_trend(qc_metrics(), qc_meta(), "1 month", input) })
   
   observe({
     output$table_info = renderTable({ get_info_table(qc_metrics(), qc_meta(), qc_qualities(), input$buffer_qc3) },

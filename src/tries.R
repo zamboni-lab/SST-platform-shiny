@@ -33,7 +33,22 @@ summary(linear_model)$r.squared
 linear_model$coefficients[2]
 
 plot(x, y)
-abline(linear_model)
+predict.lm(linear_model, data.frame(x = seq(1,17, 0.1)))
+
+
+
+ggplot(data.frame(x=x, y=y), aes(x, y)) +
+  geom_point() +
+  geom_smooth(method='lm') +
+  labs(x = "Days", y = "Scaled values") +
+  scale_x_continuous(breaks=seq(x[1], x[length(x)], 1)) +
+  stat_cor(label.x = x[length(x)]-5, label.y = max(y))
+  # stat_regline_equation(label.x = 3, label.y = 32)
+
+
+ggscatter(data.frame(x=x, y=y), x="x", y="y", add = "reg.line") +
+  stat_cor(label.x = x[length(x)], label.y = 34) +
+  stat_regline_equation(label.x = 3, label.y = 32)
 
 
 for (metric in metrics_names){
