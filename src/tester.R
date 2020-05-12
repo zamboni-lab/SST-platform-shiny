@@ -51,7 +51,7 @@ ui = dashboardPage(
                   style = "height:130px;",
                   valueBoxOutput("number_of_good_runs"),
                   valueBoxOutput("number_of_bad_runs"),
-                  valueBoxOutput("number_of_recent_runs")
+                  valueBoxOutput("days_since")
                 )
               ),
               
@@ -194,13 +194,13 @@ server = function(input, output, session) {
     qc_metrics = qc_metrics()[qc_metrics()["meta_id"][[1]] %in% qc_meta_ids, ]
     
     # select date based on selected buffer
-    updateSelectInput(session, "date", choices = qc_metrics[rev(order(as.Date(qc_metrics$acquisition_date))), "acquisition_date"] )
+    updateSelectInput(session, "date", choices = qc_metrics[rev(order(qc_metrics$acquisition_date)), "acquisition_date"] )
   })
   
   # TODO: compute values for boxes
-  output$number_of_good_runs = renderValueBox({ valueBox(10 * 2, "Total \"good\"", icon = icon("database"), color = "green") })
-  output$number_of_bad_runs = renderValueBox({ valueBox(10 * 2, "Total \"bad\"", icon = icon("database"), color = "red") })
-  output$number_of_recent_runs = renderValueBox({ valueBox(3, "days since", icon = icon("file-upload"), color = "light-blue") })
+  output$number_of_good_runs = renderValueBox({ valueBox(get_number_of_runs(qc_meta(), 1, input$buffer_qc1), "Total \"good\"", icon = icon("database"), color = "green") })
+  output$number_of_bad_runs = renderValueBox({ valueBox(get_number_of_runs(qc_meta(), 0, input$buffer_qc1), "Total \"bad\"", icon = icon("database"), color = "red") })
+  output$days_since = renderValueBox({ valueBox(get_number_of_days_since(qc_meta(), input$buffer_qc1), "days since", icon = icon("file-upload"), color = "light-blue") })
   
   # TODO: compute values for boxes
   output$number_of_positive_trends = renderValueBox({ valueBox(10 * 2, "Increased", icon = icon("arrow-up"), color = "green") })

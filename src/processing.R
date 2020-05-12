@@ -21,11 +21,23 @@ read_qc_qualities = function(path){
   as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_metrics_qualities'))
 }
 
+get_number_of_runs = function(meta_data, quality_value, selected_buffer){
+  ## counts number of runs for selected buffer with specified quality 
+  buffer_meta_data = meta_data[meta_data["buffer_id"] == selected_buffer, ]
+  return(sum(buffer_meta_data$quality == quality_value))
+}
+
+get_number_of_days_since = function(meta_data, selected_buffer){
+  ## counts number of days since last QC run for selected buffer
+  buffer_meta_data = meta_data[meta_data["buffer_id"] == selected_buffer, ]
+  last_date = tail(buffer_meta_data$acquisition_date[order(buffer_meta_data$acquisition_date)], 1)
+  days_since = round(difftime(Sys.Date(), last_date, units = "days"))
+  return(days_since)
+}
 
 update_databases_with_quality_and_comment = function(input){
   ## updates all three databases with specified quality for the run of chosed acquisition date
   ## also adds user comment to qc_meta table of qc_metrics database
-  
   
   # connect to metrics database
   con2 = dbConnect(SQLite(), dbname=metrics_db_path)
@@ -460,9 +472,8 @@ color_qc_table = function(qc_table){
   return(qc_table)
 }
 
-
 make_naive_coloring_for_qc_table = function(qc_table){
-  ## old method, renamed into "naive"
+  ## old method, renamed to "naive"
   ## adds coloring for the table based on the simple QC score
   
   scoring = qc_table
