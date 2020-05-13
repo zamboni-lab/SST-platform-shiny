@@ -52,7 +52,7 @@ plot_linear_trend = function(metrics_data, meta_data, time_period, input){
     geom_smooth(method='lm') +
     labs(x = "Days", y = "Scaled values") +
     scale_x_continuous(breaks=seq(x[1], x[length(x)], 1)) +
-    labs(title = paste(time_period, "trend"),
+    labs(title = paste0(time_period, " trend: ", selected_metric),
          subtitle = paste0("R = ", round(score, 3), ", coef = ", round(coeff, 3))) +
     theme(plot.title = element_text(color="black", size=14, face="bold", hjust = 0.5),
           plot.subtitle = element_text(color="black", size=14, hjust = 0.5))

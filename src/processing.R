@@ -280,6 +280,71 @@ get_colored_table_for_metrics = function(metrics_data, meta_data, qualities_data
 }
 
 
+get_number_of_two_weeks_trends_of_type = function(metrics_data, meta_data, selected_buffer, trend_type){
+  ## runs linear regression for last 2 weeks data of the specified buffer,
+  ## counts number of increased / decreased / unchanged metrics (as specified in trend_type)
+  
+  # take meta ids of selected buffer
+  buffer_ids = meta_data[meta_data["buffer_id"] == selected_buffer, "id"]
+  
+  # take entries of selected buffer
+  buffer_data = metrics_data[metrics_data["meta_id"][[1]] %in% buffer_ids, ]  # in metrics db
+  
+  # sort both by acquisition_date
+  buffer_data = buffer_data[order(buffer_data$acquisition_date), ]
+  
+  # get the last date and dates since
+  last_date = as.Date(tail(buffer_data$acquisition_date, 1))
+  
+  # take last 2 weeks
+  recent_data = buffer_data[buffer_data$acquisition_date >= last_date-15, ]
+  
+  # compute time intervals between measurements in days
+  days_diffs = difftime(recent_data$acquisition_date[2:length(recent_data$acquisition_date)],
+                        recent_data$acquisition_date[1:length(recent_data$acquisition_date)-1], units = "days")
+  
+  # compute the entire time axis
+  for (i in 2:length(days_diffs)){ days_diffs[i] = days_diffs[i-1] + days_diffs[i] }
+  days_diffs = c(0, days_diffs)
+  
+  result = data.frame(matrix(ncol = length(metrics_names), nrow = 1))
+  colnames(result) = metrics_names
+  
+  for (metric in metrics_names){
+    
+    y = scale(recent_data[recent_data[metric] > 0, metric])
+    x = days_diffs[recent_data[metric] > 0]
+    
+    if (length(x) >= 2 & length(y) >= 2){
+      # if there's at least two point in recent subset, then fit and define
+      
+      linear_model = lm(y ~ x)
+      score = summary(linear_model)$r.squared
+      coeff = linear_model$coefficients[2]
+      
+      if (score >= 0.01){
+        if (abs(coeff) >= 0.05){
+          if (coeff < 0){
+            result[1, metric] = 'decreased'
+          } else {
+            result[1, metric] = 'increased'
+          }
+        } else {
+          result[1, metric] = 'unchanged'
+        }
+      } else {
+        result[1, metric] = 'unchanged'
+      }
+    } else {
+      # otherwise, set to "none" symbol
+      result[1, metric] = 'none'
+    }
+  }
+  
+  return(sum(result[1,] == trend_type))
+}
+
+
 get_trends_table_for_a_subset = function(data, date_since){
   ## subsets supplied dataset by the date, then does some preprocessing and
   ## runs linear regression for each metric to identify trends

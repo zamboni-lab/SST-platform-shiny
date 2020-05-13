@@ -39,16 +39,18 @@ ui = dashboardPage(
                   status = "info",
                   solidHeader = FALSE,
                   width = 6,
-                  style = "height:130px;",
+                  style = "height:160px;",
                   column(width=6, shinyjs::useShinyjs(), shinyjs::disabled(textInput("chemical_mix", "Chemical mix:", "20190522_4GHz"))),
-                  column(width=6, selectInput("buffer_qc1", "Select buffer:", choices = c()) )
+                  column(width=6, selectInput("buffer_qc1", "Select buffer:", choices = c()) ),
+                  column(width=12, helpText("Single chemical mix was used to generate all the data. Buffers were different. Select a buffer to see the corresponding results."))
                 ),
                 
                 box(
                   status = "warning",
                   solidHeader = FALSE,
                   width = 6,
-                  style = "height:130px;",
+                  style = "height:160px;",
+                  column(width=12, p(tags$b("General info"), "for the selected buffer:")),
                   valueBoxOutput("number_of_good_runs"),
                   valueBoxOutput("number_of_bad_runs"),
                   valueBoxOutput("days_since")
@@ -61,7 +63,7 @@ ui = dashboardPage(
                   style = "height:620px;",
                   status = "info", 
                   solidHeader = TRUE,
-                  helpText("Distributions are displayed for all the data acquired since 2019-05-24. Red dashed line indicates selected QC run value."),
+                  helpText("Distributions are displayed for all the acquired data of selected buffer. Red dashed line indicates selected QC run value."),
                   hr(),
                   selectInput("date", "Select run:", choices = c()),
                   hr(),
@@ -94,18 +96,22 @@ ui = dashboardPage(
                   status = "info",
                   solidHeader = FALSE,
                   width = 6,
-                  style = "height:130px;",
+                  style = "height:160px;",
                   column(width=6, shinyjs::useShinyjs(), shinyjs::disabled(textInput("chemical_mix", "Chemical mix:", "20190522_4GHz"))),
-                  column(width=6, selectInput("buffer_qc2", "Select buffer:", choices = c()) )
+                  column(width=6, selectInput("buffer_qc2", "Select buffer:", choices = c()) ),
+                  column(width=12, helpText("Single chemical mix was used to generate all the data. Buffers were different. Select a buffer to see the corresponding results."))
+                  
                 ),
                 box(
                   status = "warning",
                   solidHeader = FALSE,
                   width = 6,
-                  style = "height:130px;",
+                  style = "height:160px;",
+                  column(width=12, p("Trends of the", tags$b("last 2 weeks"), ":")),
                   valueBoxOutput("number_of_positive_trends"),
                   valueBoxOutput("number_of_negative_trends"),
-                  valueBoxOutput("number_of_unchanged_metrics")
+                  valueBoxOutput("number_of_unchanged_metrics"),
+                  
                 )
               ),
               
@@ -113,12 +119,13 @@ ui = dashboardPage(
                 box(
                   width = 3, status = "info", solidHeader = TRUE,
                   style = "height:450px;",
-                  helpText("Data since 2019-05-24 is shown with bad quality metrics excluded."),
+                  helpText("Last 50 runs are plotted with \"bad\" quality metrics excluded."),
                   hr(),
                   selectInput("metric", "Select metric:", choices=qc_metrics_descriptions$metrics_names),  # date and quality cols excluded
                   hr(),
                   htmlOutput("metric_description"),
-                  hr()
+                  hr(),
+                  helpText("Below are linear trends computed for each metric individually. \"Bad\" quality metrics were not excluded. ")
                 ),
                 box(
                   width = 9, status = "primary",
@@ -139,7 +146,6 @@ ui = dashboardPage(
                   width = 12, status = "primary",
                   column(width=6, plotOutput("two_weeks_trend_plot")),
                   column(width=6, plotOutput("one_month_trend_plot"))
-                  # column(width=4, plotOutput("two_months_trend_plot"))
                   )
                 )
               )
@@ -197,15 +203,19 @@ server = function(input, output, session) {
     updateSelectInput(session, "date", choices = qc_metrics[rev(order(qc_metrics$acquisition_date)), "acquisition_date"] )
   })
   
-  # TODO: compute values for boxes
-  output$number_of_good_runs = renderValueBox({ valueBox(get_number_of_runs(qc_meta(), 1, input$buffer_qc1), "Total \"good\"", icon = icon("database"), color = "green") })
-  output$number_of_bad_runs = renderValueBox({ valueBox(get_number_of_runs(qc_meta(), 0, input$buffer_qc1), "Total \"bad\"", icon = icon("database"), color = "red") })
-  output$days_since = renderValueBox({ valueBox(get_number_of_days_since(qc_meta(), input$buffer_qc1), "days since", icon = icon("file-upload"), color = "light-blue") })
+  output$number_of_good_runs = renderValueBox({ valueBox(get_number_of_runs(qc_meta(), 1, input$buffer_qc1),
+                                                         "Total \"good\"", icon = icon("database"), color = "green") })
+  output$number_of_bad_runs = renderValueBox({ valueBox(get_number_of_runs(qc_meta(), 0, input$buffer_qc1),
+                                                        "Total \"bad\"", icon = icon("database"), color = "red") })
+  output$days_since = renderValueBox({ valueBox(get_number_of_days_since(qc_meta(), input$buffer_qc1),
+                                                "days since", icon = icon("file-upload"), color = "light-blue") })
   
-  # TODO: compute values for boxes
-  output$number_of_positive_trends = renderValueBox({ valueBox(10 * 2, "Increased", icon = icon("arrow-up"), color = "green") })
-  output$number_of_negative_trends = renderValueBox({ valueBox(10 * 2, "Decreased", icon = icon("arrow-down"), color = "red") })
-  output$number_of_unchanged_metrics = renderValueBox({ valueBox(10 * 2, "Unchanged", icon = icon("equals"), color = "light-blue") })
+  output$number_of_positive_trends = renderValueBox({ valueBox(get_number_of_two_weeks_trends_of_type(qc_metrics(), qc_meta(), input$buffer_qc2, "increased"),
+                                                               "Increased", icon = icon("arrow-up"), color = "green") })
+  output$number_of_negative_trends = renderValueBox({ valueBox(get_number_of_two_weeks_trends_of_type(qc_metrics(), qc_meta(), input$buffer_qc2, "decreased"),
+                                                               "Decreased", icon = icon("arrow-down"), color = "red") })
+  output$number_of_unchanged_metrics = renderValueBox({ valueBox(get_number_of_two_weeks_trends_of_type(qc_metrics(), qc_meta(), input$buffer_qc2, "unchanged"),
+                                                                 "Unchanged", icon = icon("equals"), color = "light-blue") })
   
   # TODO: refine this plot: add outliers, but mark them with red, and fix the y axis according to the most values 
   output$chonological_plot = renderPlot({ plot_chronology_by_buffer(qc_metrics(), qc_meta(), qc_qualities(), input) }, height = 430)
