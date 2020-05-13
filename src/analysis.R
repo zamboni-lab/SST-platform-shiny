@@ -186,7 +186,7 @@ plot_few_metrics_choronologically = function(good_data){
                   values = good_data$fragmentation_712,
                   acquisition_date = good_data$acquisition_date)
   
-  df = df[rev(order(as.Date(df$acquisition_date))),]  # sort by date
+  df = df[rev(order(df$acquisition_date)),]  # sort by date
   df = na.omit(df[1:50,])  # plot only last 50 runs (otherwise it's squeezed too much)
   df[,3] = substring(df[,3], 1, 10)
   
@@ -204,7 +204,7 @@ plot_few_metrics_choronologically = function(good_data){
                   values = good_data$baseline_50_650,
                   acquisition_date = good_data$acquisition_date)
   
-  df = df[rev(order(as.Date(df$acquisition_date))),]  # sort by date
+  df = df[rev(order(df$acquisition_date)),]  # sort by date
   df = na.omit(df[1:50,])  # plot only last 50 runs (otherwise it's squeezed too much)
   df[,3] = substring(df[,3], 1, 10)
   
@@ -221,7 +221,7 @@ plot_few_metrics_choronologically = function(good_data){
                   values = good_data$s2b,
                   acquisition_date = good_data$acquisition_date)
   
-  df = df[rev(order(as.Date(df$acquisition_date))),]  # sort by date
+  df = df[rev(order(df$acquisition_date)),]  # sort by date
   df = na.omit(df[1:50,])  # plot only last 50 runs (otherwise it's squeezed too much)
   df[,3] = substring(df[,3], 1, 10)
   

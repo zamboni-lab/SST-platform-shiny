@@ -544,7 +544,7 @@ color_qc_table = function(qc_table){
   
   # change ordering for convenience
   qc_table = qc_table[,c(1,ncol(qc_table), seq(2,ncol(qc_table)-1,1))]
-  qc_table = qc_table[rev(order(as.Date(qc_table$acquisition_date))),]
+  qc_table = qc_table[rev(order(qc_table$acquisition_date)),]
   
   return(qc_table)
 }
@@ -584,7 +584,7 @@ make_naive_coloring_for_qc_table = function(qc_table){
   
   # change ordering for convenience
   qc_table = qc_table[,c(1,ncol(qc_table), seq(2,ncol(qc_table)-1,1))]
-  qc_table = qc_table[rev(order(as.Date(qc_table$acquisition_date))),]
+  qc_table = qc_table[rev(order(qc_table$acquisition_date)),]
   
   return(qc_table)
 }
@@ -679,7 +679,7 @@ make_ci_based_coloring_for_qc_table = function(qc_table){
   
   # change ordering for convenience
   qc_table = qc_table[,c(1,ncol(qc_table), seq(2,ncol(qc_table)-1,1))]
-  qc_table = qc_table[rev(order(as.Date(qc_table$acquisition_date))),]
+  qc_table = qc_table[rev(order(qc_table$acquisition_date)),]
   
   return(qc_table)
 }
