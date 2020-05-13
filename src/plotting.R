@@ -51,7 +51,7 @@ plot_linear_trend = function(metrics_data, meta_data, time_period, input){
     geom_point() +
     geom_smooth(method='lm') +
     labs(x = "Days", y = "Scaled values") +
-    scale_x_continuous(breaks=seq(x[1], x[length(x)], 1)) +
+    scale_x_continuous(breaks=seq(x[1], x[length(x)] + 1, 1)) +
     labs(title = paste0(time_period, " trend: ", selected_metric),
          subtitle = paste0("R = ", round(score, 3), ", coef = ", round(coeff, 3))) +
     theme(plot.title = element_text(color="black", size=14, face="bold", hjust = 0.5),
@@ -97,27 +97,24 @@ plot_chronology_by_buffer = function(metrics_data, meta_data, qualities_data, in
   buffer_data = metrics_data[metrics_data["meta_id"][[1]] %in% qc_meta_ids, ]  # in metrics db
   buffer_qualities = qualities_data[qualities_data["meta_id"][[1]] %in% qc_meta_ids, ]  # in qualities db
   
-  # filter out "bad" runs according to general quality
-  general_good_data = buffer_data[buffer_qualities$quality == 1,]  # in metrics db
-  general_good_qualities = buffer_qualities[buffer_qualities$quality == 1,]  # in qualities db
-  
   # filter out "bad" runs according to specified metric
-  data = general_good_data[general_good_qualities[input$metric] == 1,]
+  data = buffer_data[buffer_qualities[input$metric] == 1,]
+  data$run_quality = factor(ifelse(data$quality == 0, "bad", "good"), levels = c("good", "bad"))
   
   # sort by date
   data = data[rev(order(data$acquisition_date)),]
   data = na.omit(data[1:50,])  # plot only last 50 runs (otherwise it's squeezed too much)
   
   ggplot(data, aes(x = acquisition_date, y = eval(parse(text=input$metric)))) +
-    geom_point(size = 2) + geom_line(group = 1) +
-    geom_point(data=data[1, c(input$metric, "acquisition_date")], aes(x = acquisition_date, y = eval(parse(text=input$metric))), color="red", size=2) +  # add red dot in the end
-    theme(axis.text.x = element_text(angle = 90)) +
-    labs(x = "Date & time", y = "Value") +
-    # ggtitle(input$metric) +
-    theme(plot.title = element_text(hjust = 0.5))
+    geom_line(group = 1) +
+    geom_point(aes(color=run_quality), size=2) +  # add red dot in the end
+    scale_color_manual(values=c('black', 'red')) +
+    scale_x_discrete(labels = substring(data$acquisition_date, 1, 10)) +
+    labs(x = "Date", y = "Value") +
+    theme(axis.text.x = element_text(angle = 90),
+          plot.title = element_text(hjust = 0.5),
+          legend.position="top")
 }
-
-
 
 plot_distribution = function(data, input){
   ## plots distribution of a QC characteristic given data and user input
@@ -212,8 +209,6 @@ plot_qc_summary_by_buffer = function(metrics_data, meta_data, input){
   
   return(figure)
 }
-
-
 
 plot_qc_summary = function(data, input){
   ## plots distribution of QC characteristics of a run on a single figure

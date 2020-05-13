@@ -51,9 +51,9 @@ ui = dashboardPage(
                   width = 6,
                   style = "height:160px;",
                   column(width=12, p(tags$b("General info"), "for the selected buffer:")),
-                  valueBoxOutput("number_of_good_runs"),
-                  valueBoxOutput("number_of_bad_runs"),
-                  valueBoxOutput("days_since")
+                  valueBoxOutput("number_of_good_runs_qc1"),
+                  valueBoxOutput("number_of_bad_runs_qc1"),
+                  valueBoxOutput("days_since_qc1")
                 )
               ),
               
@@ -108,9 +108,9 @@ ui = dashboardPage(
                   width = 6,
                   style = "height:160px;",
                   column(width=12, p("Trends of the", tags$b("last 2 weeks"), ":")),
-                  valueBoxOutput("number_of_positive_trends"),
-                  valueBoxOutput("number_of_negative_trends"),
-                  valueBoxOutput("number_of_unchanged_metrics"),
+                  valueBoxOutput("number_of_positive_trends_qc2"),
+                  valueBoxOutput("number_of_negative_trends_qc2"),
+                  valueBoxOutput("number_of_unchanged_metrics_qc2"),
                   
                 )
               ),
@@ -155,16 +155,38 @@ ui = dashboardPage(
     tabItem(tabName = "qc3",
             fluidPage(
               titlePanel("QC Table"),
-              box(
-                status = "info", solidHeader = FALSE, width = 12,
-                column(width=3, shinyjs::useShinyjs(), shinyjs::disabled(textInput("chemical_mix", "Chemical mix:", "20190522_4GHz"))),
-                column(width=3, selectInput("buffer_qc3", "Select buffer:", choices = c()) )
+              
+              fluidRow(
+                box(
+                  status = "info", solidHeader = FALSE,
+                  width = 6,
+                  style = "height:160px;",
+                  column(width=6, shinyjs::useShinyjs(), shinyjs::disabled(textInput("chemical_mix", "Chemical mix:", "20190522_4GHz"))),
+                  column(width=6, selectInput("buffer_qc3", "Select buffer:", choices = c()) ),
+                  column(width=12, helpText("Single chemical mix was used to generate all the data. Buffers were different. Select a buffer to see the corresponding entries in the table below. Last 100 QC runs are displayed."))
+                ),
+                box(
+                  status = "warning",
+                  solidHeader = FALSE,
+                  width = 6,
+                  style = "height:160px;",
+                  column(width=12, p(tags$b("General info"), "for the selected buffer:")),
+                  valueBoxOutput("number_of_good_runs_qc3"),
+                  valueBoxOutput("number_of_bad_runs_qc3"),
+                  valueBoxOutput("days_since_qc3")
+                )
+                
               ),
-              box(
-                width = 12, status = "primary",
-                column(width=3, div(style = 'overflow-x: scroll', tableOutput('table_info'))),
-                column(width=9, div(style = 'overflow-x: scroll', tableOutput('table_values')))
+              
+              fluidRow(
+                box(
+                  width = 12, status = "primary",
+                  column(width=3, div(style = 'overflow-x: scroll', tableOutput('table_info'))),
+                  column(width=9, div(style = 'overflow-x: scroll', tableOutput('table_values')))
+                )
               )
+             
+              
             ))
   ))
 )
@@ -203,21 +225,19 @@ server = function(input, output, session) {
     updateSelectInput(session, "date", choices = qc_metrics[rev(order(qc_metrics$acquisition_date)), "acquisition_date"] )
   })
   
-  output$number_of_good_runs = renderValueBox({ valueBox(get_number_of_runs(qc_meta(), 1, input$buffer_qc1),
-                                                         "Total \"good\"", icon = icon("database"), color = "green") })
-  output$number_of_bad_runs = renderValueBox({ valueBox(get_number_of_runs(qc_meta(), 0, input$buffer_qc1),
-                                                        "Total \"bad\"", icon = icon("database"), color = "red") })
-  output$days_since = renderValueBox({ valueBox(get_number_of_days_since(qc_meta(), input$buffer_qc1),
-                                                "days since", icon = icon("file-upload"), color = "light-blue") })
+  output$number_of_good_runs_qc1 = renderValueBox({ valueBox(get_number_of_runs(qc_meta(), 1, input$buffer_qc1), "Total \"good\"", icon = icon("database"), color = "green") })
+  output$number_of_bad_runs_qc1 = renderValueBox({ valueBox(get_number_of_runs(qc_meta(), 0, input$buffer_qc1), "Total \"bad\"", icon = icon("database"), color = "red") })
+  output$days_since_qc1 = renderValueBox({ valueBox(get_number_of_days_since(qc_meta(), input$buffer_qc1), "days since", icon = icon("file-upload"), color = "light-blue") })
+
+  output$number_of_good_runs_qc3 = renderValueBox({ valueBox(get_number_of_runs(qc_meta(), 1, input$buffer_qc3), "Total \"good\"", icon = icon("database"), color = "green") })
+  output$number_of_bad_runs_qc3 = renderValueBox({ valueBox(get_number_of_runs(qc_meta(), 0, input$buffer_qc3), "Total \"bad\"", icon = icon("database"), color = "red") })
+  output$days_since_qc3 = renderValueBox({ valueBox(get_number_of_days_since(qc_meta(), input$buffer_qc3), "days since", icon = icon("file-upload"), color = "light-blue") })
   
-  output$number_of_positive_trends = renderValueBox({ valueBox(get_number_of_two_weeks_trends_of_type(qc_metrics(), qc_meta(), input$buffer_qc2, "increased"),
-                                                               "Increased", icon = icon("arrow-up"), color = "green") })
-  output$number_of_negative_trends = renderValueBox({ valueBox(get_number_of_two_weeks_trends_of_type(qc_metrics(), qc_meta(), input$buffer_qc2, "decreased"),
-                                                               "Decreased", icon = icon("arrow-down"), color = "red") })
-  output$number_of_unchanged_metrics = renderValueBox({ valueBox(get_number_of_two_weeks_trends_of_type(qc_metrics(), qc_meta(), input$buffer_qc2, "unchanged"),
-                                                                 "Unchanged", icon = icon("equals"), color = "light-blue") })
+  output$number_of_positive_trends_qc2 = renderValueBox({ valueBox(get_number_of_two_weeks_trends_of_type(qc_metrics(), qc_meta(), input$buffer_qc2, "increased"), "Increased", icon = icon("arrow-up"), color = "green") })
+  output$number_of_negative_trends_qc2 = renderValueBox({ valueBox(get_number_of_two_weeks_trends_of_type(qc_metrics(), qc_meta(), input$buffer_qc2, "decreased"), "Decreased", icon = icon("arrow-down"), color = "red") })
+  output$number_of_unchanged_metrics_qc2 = renderValueBox({ valueBox(get_number_of_two_weeks_trends_of_type(qc_metrics(), qc_meta(), input$buffer_qc2, "unchanged"), "Unchanged", icon = icon("equals"), color = "light-blue") })
   
-  # TODO: refine this plot: add outliers, but mark them with red, and fix the y axis according to the most values 
+  # TODO: refine this plot: add outliers, but mark them with red, and fix the y axis according to the most values ?
   output$chonological_plot = renderPlot({ plot_chronology_by_buffer(qc_metrics(), qc_meta(), qc_qualities(), input) }, height = 430)
   output$summary_plot = renderPlot({ plot_qc_summary_by_buffer(qc_metrics(), qc_meta(), input) }, height = 600)
   

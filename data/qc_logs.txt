@@ -839,9 +839,9 @@ Feature extraction finished, 11.951182842254639 seconds elapsed
 QC characteristics have been computed successfully
 QC databases have been updated
 
-2020-05-08T182033: input validation started for file 20190522_4Ghz_Masiero_20200418.d
+2020-05-13T154218: input validation started for file 20190522_4Ghz_Masiero_20200418.d
 Valid. Feature extraction started...
-Feature extraction finished, 16.130388975143433 seconds elapsed
+Feature extraction finished, 16.806817054748535 seconds elapsed
 QC characteristics have been computed successfully
 QC databases have been updated
 

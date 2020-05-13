@@ -262,8 +262,14 @@ get_colored_table_for_metrics = function(metrics_data, meta_data, qualities_data
   buffer_qualities = qualities_data[qualities_data["meta_id"][[1]] %in% buffer_ids, ]  # in qualities db
   
   # sort both by acquisition_date and remove meta info (take only values and qualities)
-  buffer_data = buffer_data[rev(order(as.Date(buffer_data$acquisition_date))), 5:ncol(buffer_data)]
-  buffer_qualities = buffer_qualities[rev(order(as.Date(buffer_qualities$acquisition_date))), 5:ncol(buffer_qualities)]
+  buffer_data = buffer_data[rev(order(buffer_data$acquisition_date)), 5:ncol(buffer_data)]
+  buffer_qualities = buffer_qualities[rev(order(buffer_qualities$acquisition_date)), 5:ncol(buffer_qualities)]
+  
+  # use and display only last 100 entries, if there are more
+  if (nrow(buffer_data) > 100){
+    buffer_data = buffer_data[1:100, ]
+    buffer_qualities = buffer_qualities[1:100, ]
+  }
   
   # edit each column: set color according to qualities
   for (i in 1:ncol(buffer_data)){
@@ -436,8 +442,14 @@ get_info_table = function(metrics_data, meta_data, qualities_data, selected_buff
   buffer_qualities = qualities_data[qualities_data["meta_id"][[1]] %in% buffer_ids, ]  # in qualities db
   
   # sort both by acquisition_date
-  buffer_data = buffer_data[rev(order(as.Date(buffer_data$acquisition_date))),]
-  buffer_qualities = buffer_qualities[rev(order(as.Date(buffer_qualities$acquisition_date))),]
+  buffer_data = buffer_data[rev(order(buffer_data$acquisition_date)),]
+  buffer_qualities = buffer_qualities[rev(order(buffer_qualities$acquisition_date)),]
+  
+  # use and display only last 100 entries, if there are more
+  if (nrow(buffer_data) > 100){
+    buffer_data = buffer_data[1:100, ]
+    buffer_qualities = buffer_qualities[1:100, ]
+  }
   
   # calculate scores
   scores = apply(buffer_qualities[, 5:ncol(buffer_qualities)], 1, sum)
