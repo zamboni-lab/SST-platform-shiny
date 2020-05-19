@@ -237,9 +237,8 @@ server = function(input, output, session) {
   output$number_of_negative_trends_qc2 = renderValueBox({ valueBox(get_number_of_two_weeks_trends_of_type(qc_metrics(), qc_meta(), input$buffer_qc2, "decreased"), "Decreased", icon = icon("arrow-down"), color = "red") })
   output$number_of_unchanged_metrics_qc2 = renderValueBox({ valueBox(get_number_of_two_weeks_trends_of_type(qc_metrics(), qc_meta(), input$buffer_qc2, "unchanged"), "Unchanged", icon = icon("equals"), color = "light-blue") })
   
-  # TODO: refine this plot: add outliers, but mark them with red, and fix the y axis according to the most values ?
   output$chonological_plot = renderPlot({ plot_chronology_by_buffer(qc_metrics(), qc_meta(), qc_qualities(), input) }, height = 430)
-  output$summary_plot = renderPlot({ plot_qc_summary_by_buffer(qc_metrics(), qc_meta(), input) }, height = 600)
+  output$summary_plot = renderPlot({ plot_qc_summary_by_buffer(qc_metrics(), qc_meta(), qc_qualities(), input) }, height = 600)
   
   output$two_weeks_trend_plot = renderPlot({ plot_linear_trend(qc_metrics(), qc_meta(), "2 weeks", input) })
   output$one_month_trend_plot = renderPlot({ plot_linear_trend(qc_metrics(), qc_meta(), "1 month", input) })

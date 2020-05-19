@@ -149,66 +149,64 @@ plot_chronology = function(data, input){
 }
 
 
-plot_qc_summary_by_buffer = function(metrics_data, meta_data, input){
-  ## since v.0.1.26, distribution plots are dependent on specified buffer
-  ## method plots distributions of QC characteristics of a run on a single figure
+plot_qc_summary_by_buffer = function(metrics_data, meta_data, qualities_data, input){
+  ## updated in v.0.1.49, distribution plots are dependent on specified buffer
+  ## filtering is done based on metrics qualities
   
   # take meta ids of selected buffer
   qc_meta_ids = meta_data[meta_data["buffer_id"] == input$buffer_qc1, "id"]
   # take entries of selected buffer in metrics db
-  data = metrics_data[metrics_data["meta_id"][[1]] %in% qc_meta_ids, ]
+  buffer_data = metrics_data[metrics_data["meta_id"][[1]] %in% qc_meta_ids, ]
+  buffer_qualities = qualities_data[qualities_data["meta_id"][[1]] %in% qc_meta_ids, ]
   
   plots_list = list()
   
-  if (data[data$acquisition_date == input$date, "quality"] == 1){
-    # if the selected run has 'quality' = 1, it will be displayed as geom_hline
-    plot_title = 'QC distributions with selected "good" run'
+  # setting just a number of a column is probably dump decision
+  for (metric_name in metrics_names){
     
-    data = data[data$quality == 1,]  # only good runs are used for plotting
-    run_index = which(data$acquisition_date == input$date)
+    i = which(metric_name == metrics_names)  # iteration
     
-    # setting just a number of a column is probably dump decision
-    for (i in 5:ncol(data)){
+    metric_values = buffer_data[buffer_qualities[metric_name] == 1, metric_name]
+    metric_dates = buffer_data[buffer_qualities[metric_name] == 1, "acquisition_date"]
+    run_qualities = factor(ifelse(buffer_data[buffer_qualities[metric_name] == 1, "quality"] == 1, "good", "bad"), levels = c("good", "bad"))
+    
+    if (input$date %in% metric_dates){
+      # draw a dotted line for this run
+      run_index = which(metric_dates == input$date)
       
-      qc_name = colnames(data)[i]
-      df = data.frame(values = data[,i], qc_metric = qc_name)
+      df = data.frame(values = metric_values, qc_metric = metric_name, run_quality = run_qualities)
       run_value = df$values[run_index]
       
-      plots_list[[i-4]] = ggplot(df, aes(qc_metric, values)) +
+      plots_list[[i]] = ggplot(df, aes(qc_metric, values)) +
         geom_violin(alpha=.3, fill="lightblue") +
         geom_boxplot(width=0.075) +
         labs(x= "", y = "") +
-        geom_hline(yintercept = run_value,
-                   linetype = "dashed", size = 0.6, color = "#FC4E07") 
+        geom_hline(yintercept = run_value, linetype = "dashed", size = 0.7, color = "#FC4E07") +
+        theme(legend.position="none")
       
-    }
-  } else {
-    # if the selected run has 'quality' = 0, it will be displayed as red point
-    plot_title = 'QC distributions with selected "bad" run'
-    
-    run_index = which(data$acquisition_date == input$date)  # save index of selected run
-    data = data[c(which(data$quality == 1), run_index),]  # keep good runs and selected run
-    
-    for (i in 5:ncol(data)){
+    } else {
+      # don't draw a dotted line for this run
       
-      qc_name = colnames(data)[i]
-      df = data.frame(values = data[,i], qc_metric = qc_name)
-      run_value = df$values[run_index]
+      df = data.frame(values = metric_values, qc_metric = metric_name, run_quality = run_qualities)
       
-      plots_list[[i-4]] = ggplot(df, aes(qc_metric, values)) +
+      plots_list[[i]] = ggplot(df, aes(qc_metric, values)) +
         geom_violin(alpha=.3, fill="lightblue") +
-        geom_jitter(shape=1, size=3, alpha = 0.5, position=position_jitter(0.15)) +
+        geom_jitter(aes(color=run_quality), shape=1, size=2, alpha = 0.5, position=position_jitter(0.15)) +
+        scale_color_manual(values=c('black', 'red')) +
         labs(x= "", y = "") +
-        geom_hline(yintercept = run_value,
-                   linetype = "dashed", size = 0.6, color = "#FC4E07")
+        theme(legend.position="none")
+      
     }
   }
+  
+  plot_title = 'QC distributions with selected run'
   
   figure = ggarrange(plotlist=plots_list, ncol=4, nrow=4)
   figure = annotate_figure(figure, top = text_grob(plot_title, face = "bold", size = 12))
   
   return(figure)
 }
+
 
 plot_qc_summary = function(data, input){
   ## plots distribution of QC characteristics of a run on a single figure
