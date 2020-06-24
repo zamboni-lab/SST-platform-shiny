@@ -94,7 +94,7 @@ plot_few_metrics_distributions = function(full_data){
                   values = full_data$resolution_200,
                   quality = factor(full_data$quality))
   
-  df = df[-6,]
+  df = df[-c(6, 58),]
   
   d_plot_1 = ggplot(df, aes(qc_metric, values)) +
     geom_violin(alpha=.3, fill="lightblue") +
@@ -102,7 +102,7 @@ plot_few_metrics_distributions = function(full_data){
     geom_jitter(shape=1, size=3, position=position_jitter(0.15), aes(colour = quality)) +
     labs(x= "", y = "")  +
     scale_colour_manual(name="quality", values=c("red", "black")) +
-    ggtitle("fragmentation_712") +
+    ggtitle("resolution_200") +
     theme(
       legend.position = c(.95, .95),
       legend.justification = c("right", "top"),
@@ -127,7 +127,7 @@ plot_few_metrics_distributions = function(full_data){
     geom_jitter(shape=1, size=3, position=position_jitter(0.15), aes(colour = quality)) +
     labs(x= "", y = "") +
     scale_colour_manual(name="quality", values=c("red", "black")) + 
-    ggtitle("fragmentation_712") +
+    ggtitle("average_accuracy") +
     theme(
       legend.position = c(.95, .95),
       legend.justification = c("right", "top"),
@@ -144,7 +144,7 @@ plot_few_metrics_distributions = function(full_data){
                   values = full_data$instrument_noise,
                   quality = factor(full_data$quality))
   
-  df = df[-c(4, 11, 20, 55),]
+  df = df[df["values"]  < 30000, ]  # filter out outliers with hardcode
   
   d_plot_3 = ggplot(df, aes(qc_metric, values)) +
     geom_violin(alpha=.3, fill="lightblue") +
@@ -152,7 +152,7 @@ plot_few_metrics_distributions = function(full_data){
     geom_jitter(shape=1, size=3, position=position_jitter(0.15), aes(colour = quality)) +
     labs(x= "", y = "") +
     scale_colour_manual(name="quality", values=c("red", "black")) +
-    ggtitle("fragmentation_712") +
+    ggtitle("instrument_noise") +
     theme(
       legend.position = c(.95, .95),
       legend.justification = c("right", "top"),
@@ -187,12 +187,11 @@ plot_few_metrics_choronologically = function(good_data){
                   acquisition_date = good_data$acquisition_date)
   
   df = df[rev(order(df$acquisition_date)),]  # sort by date
-  df = na.omit(df[1:50,])  # plot only last 50 runs (otherwise it's squeezed too much)
+  df = na.omit(df[1:30,])  # plot only last 50 runs (otherwise it's squeezed too much)
   df[,3] = substring(df[,3], 1, 10)
   
   chr_plot_1 = ggplot(df, aes(x = acquisition_date, y = values)) +
     geom_point(size = 2) + geom_line(group = 1) +
-    geom_point(data = df[1, ], aes(x = acquisition_date, y = values), color="red", size=2) +  # add red dot in the end
     labs(x = "Date", y = "") +
     ggtitle("fragmentation_712") +
     theme(plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
@@ -205,12 +204,11 @@ plot_few_metrics_choronologically = function(good_data){
                   acquisition_date = good_data$acquisition_date)
   
   df = df[rev(order(df$acquisition_date)),]  # sort by date
-  df = na.omit(df[1:50,])  # plot only last 50 runs (otherwise it's squeezed too much)
+  df = na.omit(df[1:30,])  # plot only last 50 runs (otherwise it's squeezed too much)
   df[,3] = substring(df[,3], 1, 10)
   
   chr_plot_2 = ggplot(df, aes(x = acquisition_date, y = values)) +
     geom_point(size = 2) + geom_line(group = 1) +
-    geom_point(data = df[1, ], aes(x = acquisition_date, y = values), color="red", size=2) +  # add red dot in the end
     labs(x = "Date", y = "") +
     ggtitle("baseline_50_650") +
     theme(plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
@@ -222,12 +220,11 @@ plot_few_metrics_choronologically = function(good_data){
                   acquisition_date = good_data$acquisition_date)
   
   df = df[rev(order(df$acquisition_date)),]  # sort by date
-  df = na.omit(df[1:50,])  # plot only last 50 runs (otherwise it's squeezed too much)
+  df = na.omit(df[1:30,])  # plot only last 50 runs (otherwise it's squeezed too much)
   df[,3] = substring(df[,3], 1, 10)
   
   chr_plot_3 = ggplot(df, aes(x = acquisition_date, y = values)) +
     geom_point(size = 2) + geom_line(group = 1) +
-    geom_point(data = df[1, ], aes(x = acquisition_date, y = values), color="red", size=2) +  # add red dot in the end
     labs(x = "Date", y = "") +
     ggtitle("s2b") +
     theme(plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
@@ -283,7 +280,7 @@ main = function(){
   library(DBI)
   library(RSQLite)
   
-  path = "/Users/andreidm/ETH/projects/shiny_qc/data/nas2_qc_metrics_database_mar18.sqlite"
+  path = "/Users/andreidm/ETH/projects/shiny_qc/data/nas2_qc_metrics_database_may13.sqlite"
   full_data = as.data.frame(dbGetQuery(dbConnect(SQLite(), dbname=path), 'select * from qc_metrics'))
   
   bad_data = full_data[full_data$quality == 0, ]
@@ -293,10 +290,11 @@ main = function(){
   if (FALSE){
     plot_metrics_cross_correlations(good_data, bad_data)
     plot_few_metrics_distributions(full_data)
-    plot_few_metrics_chronologically(good_data)
+    
     explore_features_dimensionality()
-  } else {
     assess_metrics_statistical_differences(good_data, bad_data)
+  } else {
+    plot_few_metrics_choronologically(good_data)
   }
   
 }
