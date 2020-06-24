@@ -102,8 +102,9 @@ plot_chronology_by_buffer = function(metrics_data, meta_data, qualities_data, in
   data$run_quality = factor(ifelse(data$quality == 0, "bad", "good"), levels = c("good", "bad"))
   
   # sort by date
-  data = data[rev(order(data$acquisition_date)),]
-  data = na.omit(data[1:50,])  # plot only last 50 runs (otherwise it's squeezed too much)
+  # data = data[rev(order(data$acquisition_date)),]
+  data = data[order(data$acquisition_date),]
+  data = tail(data, 50)  # plot only last 50 runs (otherwise it's squeezed too much)
   
   ggplot(data, aes(x = acquisition_date, y = eval(parse(text=input$metric)))) +
     geom_line(group = 1) +
