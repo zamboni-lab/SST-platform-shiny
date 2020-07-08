@@ -32,7 +32,7 @@ get_number_of_days_since = function(meta_data, selected_buffer){
   buffer_meta_data = meta_data[meta_data["buffer_id"] == selected_buffer, ]
   last_date = tail(buffer_meta_data$acquisition_date[order(buffer_meta_data$acquisition_date)], 1)
   days_since = round(difftime(Sys.Date(), last_date, units = "days"))
-  return(days_since)
+  return(days_since+1)
 }
 
 update_databases_with_quality_and_comment = function(input){
@@ -305,49 +305,54 @@ get_number_of_two_weeks_trends_of_type = function(metrics_data, meta_data, selec
   # take last 2 weeks
   recent_data = buffer_data[buffer_data$acquisition_date >= last_date-15, ]
   
-  # compute time intervals between measurements in days
-  days_diffs = difftime(recent_data$acquisition_date[2:length(recent_data$acquisition_date)],
-                        recent_data$acquisition_date[1:length(recent_data$acquisition_date)-1], units = "days")
-  
-  # compute the entire time axis
-  for (i in 2:length(days_diffs)){ days_diffs[i] = days_diffs[i-1] + days_diffs[i] }
-  days_diffs = c(0, days_diffs)
-  
-  result = data.frame(matrix(ncol = length(metrics_names), nrow = 1))
-  colnames(result) = metrics_names
-  
-  for (metric in metrics_names){
+  if (nrow(recent_data) < 2){
+    # in the last two weeks only a single QC run happened, no trend can be detected
+    return(0)
+  } else {
+    # compute time intervals between measurements in days
+    days_diffs = difftime(recent_data$acquisition_date[2:length(recent_data$acquisition_date)],
+                          recent_data$acquisition_date[1:length(recent_data$acquisition_date)-1], units = "days")
     
-    y = scale(recent_data[recent_data[metric] > 0, metric])
-    x = days_diffs[recent_data[metric] > 0]
+    # compute the entire time axis
+    for (i in 2:length(days_diffs)){ days_diffs[i] = days_diffs[i-1] + days_diffs[i] }
+    days_diffs = c(0, days_diffs)
     
-    if (length(x) >= 2 & length(y) >= 2){
-      # if there's at least two point in recent subset, then fit and define
+    result = data.frame(matrix(ncol = length(metrics_names), nrow = 1))
+    colnames(result) = metrics_names
+    
+    for (metric in metrics_names){
       
-      linear_model = lm(y ~ x)
-      score = summary(linear_model)$r.squared
-      coeff = linear_model$coefficients[2]
+      y = scale(recent_data[recent_data[metric] > 0, metric])
+      x = days_diffs[recent_data[metric] > 0]
       
-      if (score >= 0.01){
-        if (abs(coeff) >= 0.05){
-          if (coeff < 0){
-            result[1, metric] = 'decreased'
+      if (length(x) >= 2 & length(y) >= 2){
+        # if there's at least two point in recent subset, then fit and define
+        
+        linear_model = lm(y ~ x)
+        score = summary(linear_model)$r.squared
+        coeff = linear_model$coefficients[2]
+        
+        if (score >= 0.01){
+          if (abs(coeff) >= 0.05){
+            if (coeff < 0){
+              result[1, metric] = 'decreased'
+            } else {
+              result[1, metric] = 'increased'
+            }
           } else {
-            result[1, metric] = 'increased'
+            result[1, metric] = 'unchanged'
           }
         } else {
           result[1, metric] = 'unchanged'
         }
       } else {
-        result[1, metric] = 'unchanged'
+        # otherwise, set to "none" symbol
+        result[1, metric] = 'none'
       }
-    } else {
-      # otherwise, set to "none" symbol
-      result[1, metric] = 'none'
     }
+    
+    return(sum(result[1,] == trend_type))
   }
-  
-  return(sum(result[1,] == trend_type))
 }
 
 
@@ -357,46 +362,54 @@ get_trends_table_for_a_subset = function(data, date_since){
   
   recent_data = data[data$acquisition_date >= date_since, ]
   
-  # compute time intervals between measurements in days
-  days_diffs = difftime(recent_data$acquisition_date[2:length(recent_data$acquisition_date)],
-                        recent_data$acquisition_date[1:length(recent_data$acquisition_date)-1], units = "days")
-  
-  # compute the entire time axis
-  for (i in 2:length(days_diffs)){ days_diffs[i] = days_diffs[i-1] + days_diffs[i] }
-  days_diffs = c(0, days_diffs)
-  
   result = data.frame(matrix(ncol = length(metrics_names), nrow = 1))
   colnames(result) = metrics_names
   
-  for (metric in metrics_names){
+  if (nrow(recent_data) < 2){
+    # if only a single QC run happened
+    for (metric in metrics_names){
+        # set all to "none" symbol
+        result[1, metric] = '<dic style="font-size: 100%; font-weight: bold"> &#8709; </div>'   # empty
+    }
+  } else {
+    # compute time intervals between measurements in days
+    days_diffs = difftime(recent_data$acquisition_date[2:length(recent_data$acquisition_date)],
+                          recent_data$acquisition_date[1:length(recent_data$acquisition_date)-1], units = "days")
     
-    y = scale(recent_data[recent_data[metric] > 0, metric])
-    x = days_diffs[recent_data[metric] > 0]
+    # compute the entire time axis
+    for (i in 2:length(days_diffs)){ days_diffs[i] = days_diffs[i-1] + days_diffs[i] }
+    days_diffs = c(0, days_diffs)
     
-    if (length(x) >= 2 & length(y) >= 2){
-      # if there's at least two point in recent subset, then fit and define
+    for (metric in metrics_names){
       
-      linear_model = lm(y ~ x)
-      score = summary(linear_model)$r.squared
-      coeff = linear_model$coefficients[2]
+      y = scale(recent_data[recent_data[metric] > 0, metric])
+      x = days_diffs[recent_data[metric] > 0]
       
-      if (score >= 0.01){
-        if (abs(coeff) >= 0.05){
-          if (coeff < 0){
-            result[1, metric] = '<div style="font-size: 100%; font-weight: bold"> &#8600; </div>'  # arrow down
+      if (length(x) >= 2 & length(y) >= 2){
+        # if there's at least two point in recent subset, then fit and define
+        
+        linear_model = lm(y ~ x)
+        score = summary(linear_model)$r.squared
+        coeff = linear_model$coefficients[2]
+        
+        if (score >= 0.01){
+          if (abs(coeff) >= 0.05){
+            if (coeff < 0){
+              result[1, metric] = '<div style="font-size: 100%; font-weight: bold"> &#8600; </div>'  # arrow down
+            } else {
+              result[1, metric] = '<div style="font-size: 100%; font-weight: bold"> &#8599; </div>'  # arrow up
+            }
           } else {
-            result[1, metric] = '<div style="font-size: 100%; font-weight: bold"> &#8599; </div>'  # arrow up
+            result[1, metric] = '<div style="font-size: 100%; font-weight: bold"> &#8909; </div>'  # almost equals
           }
         } else {
-          result[1, metric] = '<div style="font-size: 100%; font-weight: bold"> &#8909; </div>'  # almost equals
+          result[1, metric] = '<dic style="font-size: 100%; font-weight: bold"> &#8909; </div>'   # almost equals
         }
       } else {
-        result[1, metric] = '<dic style="font-size: 100%; font-weight: bold"> &#8909; </div>'   # almost equals
+        # otherwise, set to "none" symbol
+        result[1, metric] = '<dic style="font-size: 100%; font-weight: bold"> &#8709; </div>'   # empty
       }
-    } else {
-      # otherwise, set to "none" symbol
-      result[1, metric] = '<dic style="font-size: 100%; font-weight: bold"> &#8709; </div>'   # empty
-    }
+    }  
   }
   return(result)
 }

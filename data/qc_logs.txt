@@ -845,3 +845,134 @@ Feature extraction finished, 16.806817054748535 seconds elapsed
 QC characteristics have been computed successfully
 QC databases have been updated
 
+2020-06-23T183214: input validation started for file 20190522_4GHz_holbrooksmith_20200603.d
+Valid. Feature extraction started...
+Feature extraction finished, 16.16833782196045 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+Unexpected error occured!
+Traceback (most recent call last):
+  File "/home/nzadmin/msqc/monitoring_system/msfe/msfe.py", line 890, in extract_features_from_ms_run
+    parser.update_feature_matrix(feature_matrix_row, feature_matrix_row_names, ms_run_ids, tunes, scans_processed, in_test_mode=in_test_mode)
+  File "/home/nzadmin/msqc/monitoring_system/msfe/parser.py", line 379, in update_feature_matrix
+    metrics_generator.calculate_metrics_and_update_qc_databases(new_ms_run, in_debug_mode=in_test_mode)
+  File "/home/nzadmin/msqc/monitoring_system/qcmg/metrics_generator.py", line 403, in calculate_metrics_and_update_qc_databases
+    notifier.send_new_qc_notification(metrics_qualities)
+  File "/home/nzadmin/msqc/monitoring_system/notifier.py", line 27, in send_new_qc_notification
+    server.login(SENDER, PASSWORD)
+  File "/home/nzadmin/miniconda3/envs/qcwatcher/lib/python3.7/smtplib.py", line 730, in login
+    raise last_exception
+  File "/home/nzadmin/miniconda3/envs/qcwatcher/lib/python3.7/smtplib.py", line 721, in login
+    initial_response_ok=initial_response_ok)
+  File "/home/nzadmin/miniconda3/envs/qcwatcher/lib/python3.7/smtplib.py", line 642, in auth
+    raise SMTPAuthenticationError(code, resp)
+smtplib.SMTPAuthenticationError: (535, b'5.7.8 Username and Password not accepted. Learn more at\n5.7.8  https://support.google.com/mail/?p=BadCredentials k2sm14097164ejc.20 - gsmtp')
+File 20190522_4GHz_holbrooksmith_20200603.d omitted
+
+2020-06-23T183252: input validation started for file 20190522_4GHz_20200527.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.060699939727783 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+Unexpected error occured!
+Traceback (most recent call last):
+  File "/home/nzadmin/msqc/monitoring_system/msfe/msfe.py", line 890, in extract_features_from_ms_run
+    parser.update_feature_matrix(feature_matrix_row, feature_matrix_row_names, ms_run_ids, tunes, scans_processed, in_test_mode=in_test_mode)
+  File "/home/nzadmin/msqc/monitoring_system/msfe/parser.py", line 379, in update_feature_matrix
+    metrics_generator.calculate_metrics_and_update_qc_databases(new_ms_run, in_debug_mode=in_test_mode)
+  File "/home/nzadmin/msqc/monitoring_system/qcmg/metrics_generator.py", line 403, in calculate_metrics_and_update_qc_databases
+    notifier.send_new_qc_notification(metrics_qualities)
+  File "/home/nzadmin/msqc/monitoring_system/notifier.py", line 27, in send_new_qc_notification
+    server.login(SENDER, PASSWORD)
+  File "/home/nzadmin/miniconda3/envs/qcwatcher/lib/python3.7/smtplib.py", line 730, in login
+    raise last_exception
+  File "/home/nzadmin/miniconda3/envs/qcwatcher/lib/python3.7/smtplib.py", line 721, in login
+    initial_response_ok=initial_response_ok)
+  File "/home/nzadmin/miniconda3/envs/qcwatcher/lib/python3.7/smtplib.py", line 642, in auth
+    raise SMTPAuthenticationError(code, resp)
+smtplib.SMTPAuthenticationError: (535, b'5.7.8 Username and Password not accepted. Learn more at\n5.7.8  https://support.google.com/mail/?p=BadCredentials q21sm13598068ejd.30 - gsmtp')
+File 20190522_4GHz_20200527.d omitted
+
+2020-06-23T183329: input validation started for file 20190522_4GHz_Durot.d
+Valid. Feature extraction started...
+Feature extraction finished, 14.895674228668213 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+Unexpected error occured!
+Traceback (most recent call last):
+  File "/home/nzadmin/msqc/monitoring_system/msfe/msfe.py", line 890, in extract_features_from_ms_run
+    parser.update_feature_matrix(feature_matrix_row, feature_matrix_row_names, ms_run_ids, tunes, scans_processed, in_test_mode=in_test_mode)
+  File "/home/nzadmin/msqc/monitoring_system/msfe/parser.py", line 379, in update_feature_matrix
+    metrics_generator.calculate_metrics_and_update_qc_databases(new_ms_run, in_debug_mode=in_test_mode)
+  File "/home/nzadmin/msqc/monitoring_system/qcmg/metrics_generator.py", line 403, in calculate_metrics_and_update_qc_databases
+    notifier.send_new_qc_notification(metrics_qualities)
+  File "/home/nzadmin/msqc/monitoring_system/notifier.py", line 27, in send_new_qc_notification
+    server.login(SENDER, PASSWORD)
+  File "/home/nzadmin/miniconda3/envs/qcwatcher/lib/python3.7/smtplib.py", line 730, in login
+    raise last_exception
+  File "/home/nzadmin/miniconda3/envs/qcwatcher/lib/python3.7/smtplib.py", line 721, in login
+    initial_response_ok=initial_response_ok)
+  File "/home/nzadmin/miniconda3/envs/qcwatcher/lib/python3.7/smtplib.py", line 642, in auth
+    raise SMTPAuthenticationError(code, resp)
+smtplib.SMTPAuthenticationError: (535, b'5.7.8 Username and Password not accepted. Learn more at\n5.7.8  https://support.google.com/mail/?p=BadCredentials a9sm14787244edr.23 - gsmtp')
+File 20190522_4GHz_Durot.d omitted
+
+2020-06-23T183412: input validation started for file 20190522_4GHz_holbrooksmith_20200511.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.14657998085022 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+Unexpected error occured!
+Traceback (most recent call last):
+  File "/home/nzadmin/msqc/monitoring_system/msfe/msfe.py", line 890, in extract_features_from_ms_run
+    parser.update_feature_matrix(feature_matrix_row, feature_matrix_row_names, ms_run_ids, tunes, scans_processed, in_test_mode=in_test_mode)
+  File "/home/nzadmin/msqc/monitoring_system/msfe/parser.py", line 379, in update_feature_matrix
+    metrics_generator.calculate_metrics_and_update_qc_databases(new_ms_run, in_debug_mode=in_test_mode)
+  File "/home/nzadmin/msqc/monitoring_system/qcmg/metrics_generator.py", line 403, in calculate_metrics_and_update_qc_databases
+    notifier.send_new_qc_notification(metrics_qualities)
+  File "/home/nzadmin/msqc/monitoring_system/notifier.py", line 27, in send_new_qc_notification
+    server.login(SENDER, PASSWORD)
+  File "/home/nzadmin/miniconda3/envs/qcwatcher/lib/python3.7/smtplib.py", line 730, in login
+    raise last_exception
+  File "/home/nzadmin/miniconda3/envs/qcwatcher/lib/python3.7/smtplib.py", line 721, in login
+    initial_response_ok=initial_response_ok)
+  File "/home/nzadmin/miniconda3/envs/qcwatcher/lib/python3.7/smtplib.py", line 642, in auth
+    raise SMTPAuthenticationError(code, resp)
+smtplib.SMTPAuthenticationError: (535, b'5.7.8 Username and Password not accepted. Learn more at\n5.7.8  https://support.google.com/mail/?p=BadCredentials gj10sm13854781ejb.61 - gsmtp')
+File 20190522_4GHz_holbrooksmith_20200511.d omitted
+
+2020-06-23T183449: input validation started for file 20190522_4GHz_holbrooksmith_20200518.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.670312881469727 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
+Unexpected error occured!
+Traceback (most recent call last):
+  File "/home/nzadmin/msqc/monitoring_system/msfe/msfe.py", line 890, in extract_features_from_ms_run
+    parser.update_feature_matrix(feature_matrix_row, feature_matrix_row_names, ms_run_ids, tunes, scans_processed, in_test_mode=in_test_mode)
+  File "/home/nzadmin/msqc/monitoring_system/msfe/parser.py", line 379, in update_feature_matrix
+    metrics_generator.calculate_metrics_and_update_qc_databases(new_ms_run, in_debug_mode=in_test_mode)
+  File "/home/nzadmin/msqc/monitoring_system/qcmg/metrics_generator.py", line 403, in calculate_metrics_and_update_qc_databases
+    notifier.send_new_qc_notification(metrics_qualities)
+  File "/home/nzadmin/msqc/monitoring_system/notifier.py", line 27, in send_new_qc_notification
+    server.login(SENDER, PASSWORD)
+  File "/home/nzadmin/miniconda3/envs/qcwatcher/lib/python3.7/smtplib.py", line 730, in login
+    raise last_exception
+  File "/home/nzadmin/miniconda3/envs/qcwatcher/lib/python3.7/smtplib.py", line 721, in login
+    initial_response_ok=initial_response_ok)
+  File "/home/nzadmin/miniconda3/envs/qcwatcher/lib/python3.7/smtplib.py", line 642, in auth
+    raise SMTPAuthenticationError(code, resp)
+smtplib.SMTPAuthenticationError: (535, b'5.7.8 Username and Password not accepted. Learn more at\n5.7.8  https://support.google.com/mail/?p=BadCredentials gg12sm10305620ejb.38 - gsmtp')
+File 20190522_4GHz_holbrooksmith_20200518.d omitted
+
+2020-07-07T164154: input validation started for file 20190522_4GHz_holbrooksmith_20200707.d
+Valid. Feature extraction started...
+Feature extraction finished, 15.596723079681396 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+

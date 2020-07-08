@@ -32,30 +32,47 @@ plot_linear_trend = function(metrics_data, meta_data, time_period, input){
   
   recent_data = buffer_data[buffer_data$acquisition_date >= last_date - time_period_in_days, ]
   
-  # compute time intervals between measurements in days
-  days_diffs = difftime(recent_data$acquisition_date[2:length(recent_data$acquisition_date)],
-                        recent_data$acquisition_date[1:length(recent_data$acquisition_date)-1], units = "days")
-  
-  # compute the entire time axis
-  for (i in 2:length(days_diffs)){ days_diffs[i] = days_diffs[i-1] + days_diffs[i] }
-  days_diffs = c(0, days_diffs)
-  
-  y = scale(recent_data[recent_data[selected_metric] > 0, selected_metric])
-  x = days_diffs[recent_data[selected_metric] > 0]
-  
-  linear_model = lm(y ~ x)
-  score = summary(linear_model)$r.squared
-  coeff = linear_model$coefficients[2]
-  
-  ggplot(data.frame(x=x, y=y), aes(x, y)) +
-    geom_point() +
-    geom_smooth(method='lm') +
-    labs(x = "Days", y = "Scaled values") +
-    scale_x_continuous(breaks=seq(x[1], x[length(x)] + 1, 1)) +
-    labs(title = paste0(time_period, " trend: ", selected_metric),
-         subtitle = paste0("R = ", round(score, 3), ", coef = ", round(coeff, 3))) +
-    theme(plot.title = element_text(color="black", size=14, face="bold", hjust = 0.5),
-          plot.subtitle = element_text(color="black", size=14, hjust = 0.5))
+  if (nrow(recent_data) < 2){
+    # if only a single QC run happened within the interval
+    
+    ggplot(recent_data, aes(x=acquisition_date, y=eval(parse(text=selected_metric)))) +
+      geom_point() +
+      geom_smooth(method='lm') +
+      labs(x = "Days", y = "Values") +
+      # scale_x_continuous(breaks=seq(x[1], x[length(x)] + 1, 1)) +
+      scale_x_discrete(labels = substring(recent_data$acquisition_date, 1, 10)) +
+      labs(title = paste0(time_period, " trend: ", selected_metric)) +
+      theme(plot.title = element_text(color="black", size=14, face="bold", hjust = 0.5),
+      plot.subtitle = element_text(color="black", size=14, hjust = 0.5))
+    
+    
+  } else {
+    
+    # compute time intervals between measurements in days
+    days_diffs = difftime(recent_data$acquisition_date[2:length(recent_data$acquisition_date)],
+                          recent_data$acquisition_date[1:length(recent_data$acquisition_date)-1], units = "days")
+    
+    # compute the entire time axis
+    for (i in 2:length(days_diffs)){ days_diffs[i] = days_diffs[i-1] + days_diffs[i] }
+    days_diffs = c(0, days_diffs)
+    
+    y = scale(recent_data[recent_data[selected_metric] > 0, selected_metric])
+    x = days_diffs[recent_data[selected_metric] > 0]
+    
+    linear_model = lm(y ~ x)
+    score = summary(linear_model)$r.squared
+    coeff = linear_model$coefficients[2]
+    
+    ggplot(data.frame(x=x, y=y), aes(x, y)) +
+      geom_point() +
+      geom_smooth(method='lm') +
+      labs(x = "Days", y = "Scaled values") +
+      scale_x_continuous(breaks=seq(x[1], x[length(x)] + 1, 1)) +
+      labs(title = paste0(time_period, " trend: ", selected_metric),
+           subtitle = paste0("R = ", round(score, 3), ", coef = ", round(coeff, 3))) +
+      theme(plot.title = element_text(color="black", size=14, face="bold", hjust = 0.5),
+            plot.subtitle = element_text(color="black", size=14, hjust = 0.5))
+  }
 }
 
 plot_distribution_by_buffer = function(metrics_data, meta_data, qualities_data, input){
