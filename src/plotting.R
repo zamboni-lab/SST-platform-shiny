@@ -53,8 +53,13 @@ plot_linear_trend = function(metrics_data, meta_data, time_period, input){
                           recent_data$acquisition_date[1:length(recent_data$acquisition_date)-1], units = "days")
     
     # compute the entire time axis
-    for (i in 2:length(days_diffs)){ days_diffs[i] = days_diffs[i-1] + days_diffs[i] }
-    days_diffs = c(0, days_diffs)
+    if (length(days_diffs) == 1){
+      # there were only 2 measurements
+      days_diffs = c(0, days_diffs)
+    } else{
+      for (i in 2:length(days_diffs)){ days_diffs[i] = days_diffs[i-1] + days_diffs[i] }
+      days_diffs = c(0, days_diffs)
+    }
     
     y = scale(recent_data[recent_data[selected_metric] > 0, selected_metric])
     x = days_diffs[recent_data[selected_metric] > 0]

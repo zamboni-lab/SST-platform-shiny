@@ -314,8 +314,13 @@ get_number_of_two_weeks_trends_of_type = function(metrics_data, meta_data, selec
                           recent_data$acquisition_date[1:length(recent_data$acquisition_date)-1], units = "days")
     
     # compute the entire time axis
-    for (i in 2:length(days_diffs)){ days_diffs[i] = days_diffs[i-1] + days_diffs[i] }
-    days_diffs = c(0, days_diffs)
+    if (length(days_diffs) == 1){
+      # there were only 2 measurements
+      days_diffs = c(0, days_diffs)
+    } else{
+      for (i in 2:length(days_diffs)){ days_diffs[i] = days_diffs[i-1] + days_diffs[i] }
+      days_diffs = c(0, days_diffs)
+    }
     
     result = data.frame(matrix(ncol = length(metrics_names), nrow = 1))
     colnames(result) = metrics_names
@@ -377,8 +382,13 @@ get_trends_table_for_a_subset = function(data, date_since){
                           recent_data$acquisition_date[1:length(recent_data$acquisition_date)-1], units = "days")
     
     # compute the entire time axis
-    for (i in 2:length(days_diffs)){ days_diffs[i] = days_diffs[i-1] + days_diffs[i] }
-    days_diffs = c(0, days_diffs)
+    if (length(days_diffs) == 1){
+      # there were only 2 measurements
+      days_diffs = c(0, days_diffs)
+    } else {
+      for (i in 2:length(days_diffs)){ days_diffs[i] = days_diffs[i-1] + days_diffs[i] }
+      days_diffs = c(0, days_diffs)
+    }
     
     for (metric in metrics_names){
       

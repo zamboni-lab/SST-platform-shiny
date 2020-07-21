@@ -976,3 +976,9 @@ Feature extraction finished, 15.596723079681396 seconds elapsed
 QC characteristics have been computed successfully
 QC databases have been updated
 
+2020-07-20T145750: input validation started for file 20190522_4GHz_holbrooksmith_20200720.d
+Valid. Feature extraction started...
+Feature extraction finished, 13.961206436157227 seconds elapsed
+QC characteristics have been computed successfully
+QC databases have been updated
+
